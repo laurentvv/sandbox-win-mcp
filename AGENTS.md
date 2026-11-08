@@ -134,7 +134,15 @@ npm run e2e                # LIVE: smoke + offline mailbox path
   `controlType` and prefer actionable nodes. See docs/lab-input-findings.md.
 - **[2026-11-08] A second msedge launch delegates to the existing instance and its pid exits** —
   resolve the live windowed pid (`Get-Process msedge | ? MainWindowHandle -ne 0`) instead of
-  trusting sandbox_launch's pid for later calls.
+  trusting sandbox_launch's pid for later calls; `sandbox_edge_debug` sidesteps it with its own
+  `--user-data-dir`.
+- **[2026-11-08] Orphaned vmmemWindowsSandbox confirmed end-to-end (lesson 3)** — killing host
+  client processes leaves the VM alive and INVISIBLE to `wsb list` ("ID introuvable"); no
+  non-elevated path clears it (CmService restart refused). Use `sbx janitor --fix` and, when it
+  says so, run the returned elevatedCommand in an admin window before any new boot.
+- **[2026-11-08] PendingFileRenameOperations can flag a reboot-pending on a healthy machine** —
+  doctor v2 lists the source(s) so a stale file-rename rename can be told apart from a real
+  CBS/WU pending reboot.
 - Full detail: [docs/upstream-audit.md](docs/upstream-audit.md) (ten live lessons → code map);
   input experiments: [docs/lab-input-findings.md](docs/lab-input-findings.md).
 

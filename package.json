@@ -14,6 +14,9 @@
     "test:handshake": "node test/mcp-handshake.js",
     "smoke": "node test/smoke.js",
     "e2e": "node test/smoke.js && node test/offline.js",
+    "lab:input": "node test/lab/input-lab.js",
+    "lab:features": "node test/lab/features-verify.js",
+    "lab:battery": "node test/lab/util-battery.js",
     "package:win": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/package.ps1",
     "test:package": "node test/package-smoke.js"
   },

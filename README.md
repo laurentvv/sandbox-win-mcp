@@ -12,7 +12,7 @@ for the full per-file audit and the ten live lessons that drive the roadmap).
 
 ### What it keeps from upstream
 
-- stdio MCP server (Node 20+) with 28 tools + the `sbx` CLI sharing the same state
+- stdio MCP server (Node 20+) with 33 tools + the `sbx` CLI sharing the same state
 - guest agent = PowerShell + native UI Automation (zero runtime installs in the guest)
 - control channel: TCP (network on) or HKDF-encrypted shared-folder mailbox (offline)
 - hardened `.wsb` defaults: no clipboard/printer/mic/camera redirection, Protected Client
@@ -24,10 +24,10 @@ for the full per-file audit and the ten live lessons that drive the roadmap).
 | Milestone | Theme | Highlights |
 |-----------|-------|-----------|
 | M0 ✅ | Bootstrap | fork + audit + reproducible smoke tests (`doctor`, MCP stdio handshake) |
-| M1 | Reliability | doctor v2 (wsb App-Execution-Alias resolution, **pending-reboot state**, orphan detection), **janitor** for headless `vmmemWindowsSandbox` orphans, conflict taxonomy |
-| M2 🟡 | Input engine | **landed (first cut)**: `sandbox_smart_click` UIA-first ladder with per-action strategy reporting + effect checks, explicit `mode: text\|keys` typing; acid test passed (consent wall dismissed in 1 call — [lab findings](docs/lab-input-findings.md)); selector hardening + scripted regression next |
-| M3 | Power features | optional **CDP passthrough** for guest Edge, stable JSON+markdown report schema, `SANDBOX_MCP_ALLOWED_ROOTS` hardening |
-| M4 | Delivery | one docs page per feature, samples, CHANGELOG, versioned releases, parity notes vs upstream v1.2.0 |
+| M1 ✅ | Reliability | doctor v2 (App-Execution-Alias resolution, **pending-reboot state**, caught a real one live), **janitor** for headless `vmmemWindowsSandbox` orphans (real orphan created + detected + elevation path proven), conflict taxonomy (`SBX_CONFLICT`/`SBX_ORPHAN`), per-stage boot telemetry, per-call `idleMinutes` |
+| M2 🟢 | Input engine | `sandbox_smart_click` UIA-first ladder with per-action strategy reporting + effect checks; explicit `mode: text\|keys` typing; **acid test passed** (consent wall dismissed in 1 call — [lab findings](docs/lab-input-findings.md)); drag + scroll verified with CDP/window oracles |
+| M3 🟡 | Power features | **CDP passthrough landed** (`sandbox_edge_debug` + DOM-level driving proven from the host), `sandbox_process_kill`; report schema + ALLOWED_ROOTS hardening pending |
+| M4 🟡 | Delivery | [feature catalog](docs/features.md) with per-feature evidence; docs pages, CHANGELOG, releases + parity notes pending |
 
 Non-goals: multi-guest concurrency (Windows allows one sandbox — we queue politely), malware
 verdicts (detonate stays heuristic), non-Windows hosts.
