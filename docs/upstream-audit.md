@@ -1,7 +1,7 @@
 # Upstream audit — sandbox-mcp v1.2.0 (import baseline)
 
 Audited 2026-11-08 before any modification, at tag `v1.2.0`, commit `b5ea2b2`
-(source: `D:\GIT\secu-tools\tools\sandbox-mcp`, submodule of secu-tools). Method: full read of
+(source: the secu-tools local checkout of the upstream submodule). Method: full read of
 `src/` (core, server, cli, protocol), signature-level mapping of `agent/`, review of test
 patterns and packaging. This document is the fork's founding map: every milestone PR links back
 to a row here.

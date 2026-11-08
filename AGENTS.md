@@ -149,5 +149,5 @@ npm run e2e                # LIVE: smoke + offline mailbox path
 ### References
 - Long context: `docs/upstream-audit.md` (import audit + roadmap mapping); upstream docs kept
   under `docs/` (compatibility measurements, agent-setup)
-- Cross-repo ecosystem: secu-tools (security-tooling suite) — upstream source of the fork lives at
-  `D:\GIT\secu-tools\tools\sandbox-mcp` (submodule, tag v1.2.0)
+- Cross-repo ecosystem: secu-tools (private security-tooling suite) — the fork source was imported
+  from its local sandbox-mcp submodule at tag v1.2.0

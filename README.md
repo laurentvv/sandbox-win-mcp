@@ -53,7 +53,7 @@ Live smoke (boots a real sandbox, ~1 min): `npm run smoke`.
   "mcpServers": {
     "sandbox-win-mcp": {
       "command": "node",
-      "args": ["D:/GIT/sandbox-win-mcp/src/server.js"]
+      "args": ["C:/path/to/sandbox-win-mcp/src/server.js"]
     }
   }
 }
