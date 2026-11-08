@@ -261,6 +261,42 @@ function Op-Drag($req) {
     @{ x1 = $x1; y1 = $y1; x2 = $x2; y2 = $y2; steps = $steps; durationMs = $duration }
 }
 
+function Op-Scroll($req) {
+    # Mouse-wheel input at a point: positive notches scroll up/left, negative down/right.
+    # mouse_event's wheel delta is a uint32; negative values must be wrapped (e.g. -360 -> 4294966936).
+    $x = [int]$req.x; $y = [int]$req.y
+    $notches = [int](Get-Opt $req.notches 3)
+    if ($notches -eq 0) { throw 'notches must be a non-zero integer (positive = up, negative = down)' }
+    if ([math]::Abs($notches) -gt 30) { throw 'notches must be between -30 and 30' }
+    $flags = 0x0800                                      # MOUSEEVENTF_WHEEL
+    if ($req.horizontal) { $flags = 0x1000 }             # MOUSEEVENTF_HWHEEL
+    if (-not [Sbx.Native]::SetCursorPos($x, $y)) {
+        throw 'desktop not interactive (locked / secure desktop / UAC): SetCursorPos failed'
+    }
+    Start-Sleep -Milliseconds 40
+    $delta = $notches * 120
+    if ($delta -lt 0) { $delta = [int64]0x100000000 + $delta }   # two's complement wrap
+    [Sbx.Native]::mouse_event($flags, 0, 0, [uint32]$delta, [IntPtr]::Zero)
+    @{ x = $x; y = $y; notches = $notches; horizontal = [bool]$req.horizontal }
+}
+
+function Op-Kill($req) {
+    # Terminate guest processes by id or name (one at a time, force for hung windows).
+    if ($req.pid) {
+        Stop-Process -Id ([int]$req.pid) -Force -ErrorAction Stop
+        return @{ stopped = @([int]$req.pid) }
+    }
+    if ($req.name) {
+        $n = [string]$req.name
+        if ($n -notmatch '^[a-zA-Z0-9_. -]{1,60}$') { throw "invalid process name '$n'" }
+        $procs = @(Get-Process -Name $n -ErrorAction SilentlyContinue)
+        if (-not $procs.Count) { return @{ stopped = @(); note = "no process named '$n'" } }
+        $procs | Stop-Process -Force -ErrorAction SilentlyContinue
+        return @{ stopped = @($procs | ForEach-Object { $_.Id }) }
+    }
+    throw 'kill needs pid or name'
+}
+
 function Op-Keys($req) {
     if ($req.windowTitle -or $req.pid) { Focus-Window (Find-Window $req).MainWindowHandle }
     $keys = [string]$req.keys
@@ -322,7 +358,7 @@ function Invoke-Request([string]$line) {
         $envelope = $line | ConvertFrom-Json
         if ($envelope.counter -gt 0 -and $envelope.counter -le 9007199254740991) { $counter = [long]$envelope.counter }
         $req = $protocol.Open($line, 'request', 0) | ConvertFrom-Json
-        if ($req.op -in @('screenshot', 'click', 'drag', 'keys', 'uiaction', 'smartclick')) { Assert-InteractiveDesktop }
+        if ($req.op -in @('screenshot', 'click', 'drag', 'scroll', 'keys', 'uiaction', 'smartclick')) { Assert-InteractiveDesktop }
         $result = switch ($req.op) {
             'ping'       { @{ user = "$env:USERDOMAIN\$env:USERNAME"; computer = $env:COMPUTERNAME; pid = $PID
                              epoch = $identity.epoch; protocolVersion = 2; agentVersion = $identity.agentVersion; agentSha256 = $agentHash } }
@@ -339,6 +375,8 @@ function Invoke-Request([string]$line) {
             'windows'    { , (Op-Windows $req) }
             'click'      { Op-Click $req }
             'drag'       { Op-Drag $req }
+            'scroll'     { Op-Scroll $req }
+            'kill'       { Op-Kill $req }
             'keys'       { Op-Keys $req }
             'uitree'     { Op-UiTree $req }
             'uiaction'   { Op-UiAction $req }

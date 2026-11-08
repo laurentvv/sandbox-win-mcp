@@ -267,7 +267,7 @@ async function call(op, params = {}, timeoutMs = 60_000, target) {
   const s = target || await requireSandbox();
   const t = Date.now();
   try {
-    const mutates = ['launch', 'click', 'drag', 'keys', 'uiaction', 'smartclick'].includes(op) ||
+    const mutates = ['launch', 'click', 'drag', 'scroll', 'keys', 'uiaction', 'smartclick'].includes(op) ||
       (op === 'deploy_apply' && (params.launch || params.restart)) ||
       (op === 'screenshot' && (params.windowTitle || params.pid));
     const invoke = () => agentCall(s, op, params, timeoutMs);
@@ -600,6 +600,32 @@ export async function drag({ x1, y1, x2, y2, durationMs, coordinates = 'screen',
     captureId = shot.captureId;
   }
   return call('drag', { x1: sx1, y1: sy1, x2: sx2, y2: sy2, durationMs: dur, captureId }, 60_000, s);
+}
+
+/** Mouse wheel at a point: positive notches scroll up (or left when horizontal). */
+export async function scroll({ x, y, notches = 3, horizontal, coordinates = 'screen', captureId }) {
+  if (!['screen', 'screenshot'].includes(coordinates)) throw new Error('coordinates must be screen or screenshot.');
+  if (![x, y].every(Number.isFinite)) throw new Error('x and y must be finite numbers.');
+  if (!Number.isInteger(notches) || notches === 0 || Math.abs(notches) > 30) {
+    throw new Error('notches must be a non-zero integer between -30 and 30 (positive = up).');
+  }
+  let sx = x, sy = y;
+  const s = await requireSandbox();
+  if (coordinates === 'screenshot') {
+    const shot = captureId ? s.captures?.[captureId] : s.lastShots?.[shotOwner];
+    ({ x: sx, y: sy } = mapCapturePoint(shot, x, y));
+    captureId = shot.captureId;
+  }
+  return call('scroll', { x: sx, y: sy, notches, horizontal: !!horizontal, captureId }, 60_000, s);
+}
+
+/** Terminate guest processes by id or name (exactly one). Returns what was stopped. */
+export async function processKill({ pid, name } = {}) {
+  if ((pid === undefined || pid === null) && !name) throw new Error('kill needs pid or name.');
+  if (pid !== undefined && pid !== null && name) throw new Error('pass pid OR name, not both.');
+  if (pid !== undefined && pid !== null && (!Number.isInteger(pid) || pid <= 0)) throw new Error('pid must be a positive integer.');
+  if (name && (!/^[a-zA-Z0-9_. -]{1,60}$/.test(name))) throw new Error(`invalid process name ${JSON.stringify(name)}`);
+  return call('kill', { pid, name });
 }
 
 /**

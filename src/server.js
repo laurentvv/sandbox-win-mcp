@@ -238,6 +238,30 @@ server.registerTool('sandbox_edge_debug', {
   },
 }, tool(async (a) => text(await sbx.edgeDebug(a))));
 
+server.registerTool('sandbox_scroll', {
+  title: 'Scroll in sandbox',
+  description: 'Mouse-wheel scroll at a point: positive notches scroll up (left with horizontal=true), ' +
+    'negative scroll down/right. One notch is one wheel detent (~3 lines of text). Default raw sandbox ' +
+    "screen pixels; coordinates='screenshot' maps pixels in the most recent screenshot (or captureId).",
+  inputSchema: {
+    x: z.number(), y: z.number(),
+    notches: z.number().int().min(-30).max(30).describe('Non-zero wheel detents; positive = up (left when horizontal).'),
+    horizontal: z.boolean().optional(),
+    coordinates: z.enum(['screenshot', 'screen']).optional(),
+    captureId: z.string().optional(),
+  },
+}, tool(async ({ coordinates = 'screen', ...a }) => text(await sbx.scroll({ ...a, coordinates }))));
+
+server.registerTool('sandbox_process_kill', {
+  title: 'Kill processes in sandbox',
+  description: 'Terminate guest processes: exactly one of pid (from sandbox_launch) or name ' +
+    '(e.g. "msedge", "notepad"). Force-terminates; returns the stopped pid(s).',
+  inputSchema: {
+    pid: z.number().int().positive().optional(),
+    name: z.string().regex(/^[a-zA-Z0-9_. -]{1,60}$/).optional().describe('Process name without .exe, e.g. "msedge".'),
+  },
+}, tool(async (a) => text(await sbx.processKill(a))));
+
 server.registerTool('sandbox_type', {
   title: 'Send keys in sandbox',
   description: 'Type text or send key chords to the focused window (or a window found by title/pid, which is focused first). ' +

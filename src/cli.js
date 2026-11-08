@@ -76,6 +76,9 @@ Step by step
                                      Click at screen pixels (default), or pixels in a specific preview
   drag <x1> <y1> <x2> <y2> [--duration <ms>]
                                      Mouse-down, animated move, mouse-up (grid selections, sliders)
+  scroll <x> <y> [notches] [--horizontal]
+                                     Mouse wheel at a point; positive = up (default 3 notches)
+  kill <name> | --pid <n>            Terminate guest processes
   type <text> [--keys] [--window <title>] [--pid <pid>]
                                      Type text (--keys: SendKeys syntax like {ENTER} or ^s)
   ui [tree] [--pid <pid>|--window <title>] [--depth <n>] [--max <n>]
@@ -290,6 +293,20 @@ async function main(argv) {
       need(2, 'click <x> <y> [--right] [--double]');
       out(opt, await sbx.click({ x: num(pos[0], 'x'), y: num(pos[1], 'y'), button: opt.right ? 'right' : 'left', double: !!opt.double,
         coordinates: opt.coordinates, captureId: opt['capture-id'] }), 'ok');
+      return 0;
+    }
+
+    case 'scroll': {
+      need(2, 'scroll <x> <y> [notches] [--horizontal] [--coordinates screenshot --capture-id <id>]');
+      out(opt, await sbx.scroll({ x: num(pos[0], 'x'), y: num(pos[1], 'y'), notches: num(pos[2], 'notches') ?? 3,
+        horizontal: !!opt.horizontal, coordinates: opt.coordinates, captureId: opt['capture-id'] }), 'ok');
+      return 0;
+    }
+
+    case 'kill': {
+      const pid = num(opt.pid, '--pid');
+      if (!pid && !pos[0]) throw new Error('usage: sbx kill <name> | --pid <n>');
+      out(opt, await sbx.processKill({ pid, name: pid ? undefined : pos[0] }));
       return 0;
     }
 

@@ -1,0 +1,44 @@
+{
+  "startedAt": "2026-11-08T02:02:46.314Z",
+  "verdicts": [
+    {
+      "what": "boot",
+      "result": "9.872s"
+    },
+    {
+      "what": "edge_debug",
+      "result": "http://172.23.246.183:9222 (Edg/157.0.4341.42)"
+    },
+    {
+      "what": "cdp page",
+      "result": "https://en.wikipedia.org/wiki/Sandbox_(computer_security)#Im scrollY=487"
+    },
+    {
+      "what": "sandbox_scroll executed",
+      "result": "{\"y\":528,\"notches\":-6,\"horizontal\":false,\"x\":511}"
+    },
+    {
+      "what": "scroll moves a real web page",
+      "result": "WORKED (scrollY 487 -> 1087)"
+    },
+    {
+      "what": "process_kill by name",
+      "result": "WORKED (stopped [9924], pid 9924 exited)"
+    },
+    {
+      "what": "process_kill by pid",
+      "result": "WORKED"
+    }
+  ],
+  "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-020246\\out",
+  "teardown": {
+    "stopped": [
+      "aa0a7aae-8d7d-4456-8e7c-93c5f737dad5"
+    ],
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-020246",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-020246\\out",
+    "artifacts": [
+      "screenshots"
+    ]
+  }
+}
