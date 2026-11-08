@@ -1,0 +1,247 @@
+{
+  "lab": "util-battery",
+  "startedAt": "2026-11-08T01:13:02.551Z",
+  "steps": [
+    {
+      "tool": "sandbox_start",
+      "args": {
+        "window": "normal"
+      },
+      "ms": 10588,
+      "text": "{\n  \"id\": \"2fc7fc44-64c5-4738-9ce2-6b6e09f70ced\",\n  \"ip\": \"172.23.251.142\",\n  \"epoch\": \"e4a87756-c265-4a82-9d25-72c496688794\",\n  \"identity\": {\n    \"protocolVersion\": 2,\n    \"agentVersion\": \"2.0.0-alpha.2\",\n    \"agentSha256\": \"28a40454ed7bea84556f456da46a40f564bfa0928b6b0c3fdb772869c9053bdd\"\n  },\n  \"network\": \"on\",\n  \"runDir\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-011"
+    },
+    {
+      "tool": "sandbox_deploy",
+      "args": {
+        "hostPath": "C:\\Users\\user\\AppData\\Local\\Temp\\sbx-deploy-NQL2xf",
+        "sandboxPath": "C:\\apps\\HelloSandbox"
+      },
+      "ms": 694,
+      "text": "{\n  \"path\": \"C:\\\\apps\\\\HelloSandbox\",\n  \"added\": 2,\n  \"changed\": 0,\n  \"removed\": 0,\n  \"unchanged\": 0,\n  \"bytesTransferred\": 6147,\n  \"ms\": 692,\n  \"stopped\": [],\n  \"verified\": true\n}"
+    },
+    {
+      "tool": "sandbox_deploy",
+      "args": {
+        "hostPath": "C:\\Users\\user\\AppData\\Local\\Temp\\sbx-deploy-NQL2xf",
+        "sandboxPath": "C:\\apps\\HelloSandbox"
+      },
+      "ms": 460,
+      "text": "{\n  \"path\": \"C:\\\\apps\\\\HelloSandbox\",\n  \"added\": 0,\n  \"changed\": 0,\n  \"removed\": 0,\n  \"unchanged\": 2,\n  \"bytesTransferred\": 0,\n  \"ms\": 460,\n  \"stopped\": [],\n  \"verified\": true\n}"
+    },
+    {
+      "tool": "sandbox_deploy",
+      "args": {
+        "hostPath": "C:\\Users\\user\\AppData\\Local\\Temp\\sbx-deploy-NQL2xf",
+        "sandboxPath": "C:\\apps\\HelloSandbox"
+      },
+      "ms": 502,
+      "text": "{\n  \"path\": \"C:\\\\apps\\\\HelloSandbox\",\n  \"added\": 0,\n  \"changed\": 1,\n  \"removed\": 0,\n  \"unchanged\": 1,\n  \"bytesTransferred\": 37,\n  \"ms\": 500,\n  \"stopped\": [],\n  \"verified\": true\n}"
+    },
+    {
+      "tool": "sandbox_record_start",
+      "args": {
+        "fps": 2,
+        "maxDurationSec": 25
+      },
+      "ms": 2608,
+      "text": "{\n  \"recordingId\": \"242231f064e1526c271e394187e48a32\",\n  \"pid\": 7360,\n  \"maxDurationSec\": 25,\n  \"fps\": 2,\n  \"maxFrames\": 50,\n  \"directory\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-011303\\\\out\\\\recordings\\\\242231f064e1526c271e394187e48a32\"\n}"
+    },
+    {
+      "tool": "sandbox_launch",
+      "args": {
+        "path": "C:\\apps\\HelloSandbox\\HelloSandbox.exe",
+        "waitForWindowSec": 20
+      },
+      "ms": 869,
+      "text": "{\n  \"hasExited\": false,\n  \"pid\": 2944,\n  \"windowTitle\": \"Hello Sandbox\",\n  \"launchedAt\": \"2026-11-08T02:13:17.6054437+01:00\"\n}"
+    },
+    {
+      "tool": "sandbox_smart_click",
+      "args": {
+        "pid": 2944,
+        "automationId": "NameBox",
+        "controlType": "Edit",
+        "verify": "state"
+      },
+      "ms": 2878,
+      "text": "focus-enter (verified: element state changed)\nelement: Edit \"Who are you?\" #NameBox\nladder: focus-enter:ok 131ms"
+    },
+    {
+      "tool": "sandbox_ui_action",
+      "args": {
+        "pid": 2944,
+        "automationId": "NameBox",
+        "action": "setvalue",
+        "value": "util-battery"
+      },
+      "ms": 121,
+      "text": "setvalue: Edit \"Hello, !\" #NameBox = \"util-battery\" {setvalue}"
+    },
+    {
+      "tool": "sandbox_smart_click",
+      "args": {
+        "pid": 2944,
+        "name": "Greet",
+        "controlType": "Button"
+      },
+      "ms": 341,
+      "text": "uia-invoke (UNVERIFIED: no visible state change (pattern executed))\nelement: Button \"Greet\" #GreetButton\nladder: uia-invoke:ok 4ms"
+    },
+    {
+      "tool": "sandbox_screenshot",
+      "args": {
+        "pid": 2944,
+        "name": "battery-after-greet"
+      },
+      "ms": 647,
+      "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303\\out\\screenshots\\001-battery-after-greet.png; source bounds (775,382) 482x292; preview 482x292, scale 1; captureId 4f64eb366cca4dd3bcd4b768bb38ae1f."
+    },
+    {
+      "tool": "sandbox_exec",
+      "args": {
+        "command": "Stop-Process -Name HelloSandbox -Force -ErrorAction SilentlyContinue"
+      },
+      "ms": 1747,
+      "text": "exitCode: 0  (1722ms)"
+    },
+    {
+      "tool": "sandbox_record_stop",
+      "args": {},
+      "ms": 1183,
+      "text": "{\n  \"recordingId\": \"242231f064e1526c271e394187e48a32\",\n  \"stopped\": true,\n  \"directory\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-011303\\\\out\\\\recordings\\\\242231f064e1526c271e394187e48a32\",\n  \"manifestPath\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-011303\\\\out\\\\recordings\\\\242231f064e1526c271e394187e48a32\\\\frames.jsonl\",\n  \"htmlPath\": \"C:\\\\Us"
+    },
+    {
+      "tool": "sandbox_stop",
+      "args": {},
+      "ms": 4265,
+      "text": "{\n  \"stopped\": [\n    \"2fc7fc44-64c5-4738-9ce2-6b6e09f70ced\"\n  ],\n  \"runDir\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-011303\",\n  \"outDir\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-011303\\\\out\",\n  \"artifacts\": [\n    \"recordings\",\n    \"screenshots\",\n    \"recordings\\\\242231f064e1526c271e394187e48a32\",\n    \"screenshots\\\\001-battery-after-greet.pn"
+    }
+  ],
+  "server": {
+    "name": "sandbox-win-mcp",
+    "version": "2.0.0-alpha.2"
+  },
+  "boot": {
+    "id": "2fc7fc44-64c5-4738-9ce2-6b6e09f70ced",
+    "ip": "172.23.251.142",
+    "epoch": "e4a87756-c265-4a82-9d25-72c496688794",
+    "identity": {
+      "protocolVersion": 2,
+      "agentVersion": "2.0.0-alpha.2",
+      "agentSha256": "28a40454ed7bea84556f456da46a40f564bfa0928b6b0c3fdb772869c9053bdd"
+    },
+    "network": "on",
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303\\out",
+    "user": "55C6CD98-9015-4\\WDAGUtilityAccount",
+    "desktop": {
+      "sessionId": 1,
+      "captureWorks": true,
+      "top": 0,
+      "inputDesktop": "Default",
+      "width": 2032,
+      "ready": true,
+      "shellRunning": true,
+      "windowStation": "WinSta0",
+      "height": 1111,
+      "captureError": null,
+      "left": 0,
+      "threadDesktop": "Default",
+      "foregroundWindow": {
+        "title": "Administrator: Windows PowerShell 5.1",
+        "handle": "196964"
+      }
+    },
+    "desktopReadySeconds": 10.111,
+    "bootSeconds": 10.113,
+    "steps": [
+      "1.2s started 2fc7fc44-64c5-4738-9ce2-6b6e09f70ced",
+      "1.7s ip 172.23.251.142",
+      "2.6s folders shared",
+      "5.2s user session ready",
+      "10.0s agent up as 55C6CD98-9015-4\\WDAGUtilityAccount",
+      "10.1s desktop ready (Default input desktop, explorer, capture verified)"
+    ]
+  },
+  "deployCold": {
+    "path": "C:\\apps\\HelloSandbox",
+    "added": 2,
+    "changed": 0,
+    "removed": 0,
+    "unchanged": 0,
+    "bytesTransferred": 6147,
+    "ms": 692,
+    "stopped": [],
+    "verified": true
+  },
+  "deployWarm": {
+    "path": "C:\\apps\\HelloSandbox",
+    "added": 0,
+    "changed": 0,
+    "removed": 0,
+    "unchanged": 2,
+    "bytesTransferred": 0,
+    "ms": 460,
+    "stopped": [],
+    "verified": true
+  },
+  "deployChanged": {
+    "path": "C:\\apps\\HelloSandbox",
+    "added": 0,
+    "changed": 1,
+    "removed": 0,
+    "unchanged": 1,
+    "bytesTransferred": 37,
+    "ms": 500,
+    "stopped": [],
+    "verified": true
+  },
+  "deployVerdict": {
+    "cold": "2 added, verified=true",
+    "warmNoop": "0 changed (expect 0), verified=true",
+    "changedOne": "1 changed (expect 1), verified=true, 37 B"
+  },
+  "recording": {
+    "started": true,
+    "published": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303\\out\\recordings\\242231f064e1526c271e394187e48a32\\recording.html",
+    "frames": 18,
+    "mp4": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303\\out\\recordings\\242231f064e1526c271e394187e48a32\\recording.mp4"
+  },
+  "teardown": {
+    "stopped": [
+      "2fc7fc44-64c5-4738-9ce2-6b6e09f70ced"
+    ],
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011303\\out",
+    "artifacts": [
+      "recordings",
+      "screenshots",
+      "recordings\\242231f064e1526c271e394187e48a32",
+      "screenshots\\001-battery-after-greet.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\control",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000000.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000001.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000002.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000003.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000004.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000005.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000006.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000007.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000008.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000009.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000010.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000011.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000012.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000013.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000014.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000015.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000016.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frame-000017.png",
+      "recordings\\242231f064e1526c271e394187e48a32\\frames.jsonl",
+      "recordings\\242231f064e1526c271e394187e48a32\\recording.html",
+      "recordings\\242231f064e1526c271e394187e48a32\\recording.mp4",
+      "recordings\\242231f064e1526c271e394187e48a32\\started",
+      "recordings\\242231f064e1526c271e394187e48a32\\status.json"
+    ]
+  }
+}

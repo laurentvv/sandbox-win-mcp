@@ -1,0 +1,146 @@
+{
+  "installer": "leaky-setup.ps1",
+  "hostPath": "D:\\GIT\\sandbox-win-mcp\\test\\lab\\fixtures\\leaky-setup.ps1",
+  "args": "",
+  "startedAt": "2026-11-08T01:11:23.298Z",
+  "shots": [
+    {
+      "name": "after-install",
+      "path": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011123\\out\\screenshots\\001-after-install.png",
+      "width": 2032,
+      "height": 1111
+    }
+  ],
+  "uninstalls": [],
+  "sandbox": {
+    "id": "2a92c883-e45a-460c-bb3a-af7315fdc45a",
+    "epoch": "d7ffada6-471f-4a60-98fe-c97887b13f49",
+    "network": "on",
+    "bootSeconds": 9.962
+  },
+  "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011123",
+  "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011123\\out",
+  "snapshots": {
+    "before": {
+      "path": "C:\\sbx-snap\\before.tsv",
+      "ms": 6388,
+      "dirs": 906,
+      "services": 676,
+      "files": 11312,
+      "registryKeys": 337220
+    },
+    "installed": {
+      "path": "C:\\sbx-snap\\installed.tsv",
+      "ms": 10686,
+      "dirs": 903,
+      "services": 676,
+      "files": 11316,
+      "registryKeys": 337224
+    }
+  },
+  "install": {
+    "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\sbx-test\\installer\\leaky-setup.ps1\"",
+    "exitCode": 0,
+    "timedOut": false,
+    "seconds": 2.143
+  },
+  "leftRunning": [],
+  "installDiff": {
+    "ms": 1262,
+    "registry": {
+      "changedCount": 0,
+      "changed": [],
+      "addedGroups": 3,
+      "addedCount": 4,
+      "removedGroups": 0,
+      "removed": [],
+      "removedCount": 0,
+      "added": [
+        {
+          "items": 1,
+          "container": true,
+          "path": "HKCU\\Software\\Microsoft\\Windows\\Winlogon"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKLM\\SOFTWARE\\LeakyApp"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\LeakyApp"
+        }
+      ]
+    },
+    "services": [],
+    "values": [],
+    "files": {
+      "changedCount": 0,
+      "changed": [],
+      "addedGroups": 3,
+      "addedCount": 5,
+      "executableCount": 3,
+      "removedGroups": 4,
+      "removed": [
+        {
+          "items": 0,
+          "container": true,
+          "path": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\MSInfo\\fr-FR"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "C:\\Program Files (x86)\\Windows NT\\TableTextService\\fr-FR"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\en-US"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "C:\\Program Files\\Windows NT\\TableTextService\\fr-FR"
+        }
+      ],
+      "addedBytes": 3556,
+      "removedCount": 4,
+      "executables": [
+        "C:\\Program Files\\LeakyApp\\leaky.dll",
+        "C:\\Program Files\\LeakyApp\\leaky.exe",
+        "C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\leaky.cmd"
+      ],
+      "added": [
+        {
+          "items": 2,
+          "container": true,
+          "path": "C:\\Program Files\\LeakyApp",
+          "bytes": 37
+        },
+        {
+          "bytes": 25,
+          "path": "C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\leaky.cmd"
+        },
+        {
+          "bytes": 3494,
+          "path": "C:\\Windows\\System32\\Tasks\\LeakyUpdate"
+        }
+      ]
+    },
+    "programsRemoved": [],
+    "programsAdded": [
+      {
+        "uninstallString": "powershell.exe -File C:\\Program Files\\LeakyApp\\uninstall.ps1",
+        "key": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\LeakyApp",
+        "displayName": "LeakyApp 1.0"
+      }
+    ]
+  },
+  "kept": false,
+  "seconds": 42.385,
+  "leftoverCount": null,
+  "failures": [],
+  "pass": true,
+  "reportPath": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-011123\\out\\report.md"
+}

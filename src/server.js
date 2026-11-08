@@ -52,6 +52,7 @@ server.registerTool('sandbox_start', {
     memoryMB: z.number().int().min(2048).optional().describe('Memory for the sandbox in MB.'),
     vGpu: z.boolean().optional().describe('GPU acceleration (default true). false = software rendering, smaller attack surface.'),
     window: z.enum(['normal', 'minimized']).optional().describe('Sandbox window state on the host (default normal, so you can watch).'),
+    idleMinutes: z.number().int().min(1).max(1440).optional().describe('Idle auto-stop after N minutes without desktop input (default 30, env SANDBOX_MCP_IDLE_MINUTES).'),
   },
 }, tool(async (a) => {
   const r = await sbx.startSandbox(a);
@@ -210,6 +211,32 @@ const selector = {
   automationId: z.string().optional().describe('AutomationId (control name in WinForms/WPF), exact match.'),
   controlType: z.string().optional().describe('Button, Edit, CheckBox, ComboBox, ListItem, MenuItem, TabItem, Text, ...'),
 };
+
+server.registerTool('sandbox_drag', {
+  title: 'Drag in sandbox',
+  description: 'Mouse-down at (x1,y1), animated move to (x2,y2), mouse-up — for grid selection, ' +
+    'sliders, file lists and splitter moves. By default raw sandbox screen pixels; with ' +
+    "coordinates='screenshot', pixels in the most recent sandbox_screenshot (or the one named by captureId); both endpoints are mapped.",
+  inputSchema: {
+    x1: z.number(), y1: z.number(), x2: z.number(), y2: z.number(),
+    durationMs: z.number().min(0).max(10000).optional().describe('Gesture duration (default 400).'),
+    coordinates: z.enum(['screenshot', 'screen']).optional(),
+    captureId: z.string().optional(),
+  },
+}, tool(async ({ coordinates = 'screen', ...a }) => text(await sbx.drag({ ...a, coordinates }))));
+
+server.registerTool('sandbox_edge_debug', {
+  title: 'Guest Edge with DevTools (CDP) reachable from the host',
+  description: 'Launch guest Microsoft Edge with --remote-debugging-port on its own profile and ' +
+    'relay the DevTools endpoint to the sandbox IP (CDP binds 127.0.0.1 in the guest; a netsh ' +
+    'portproxy bridges it). Returns the HTTP base URL plus the browser/protocol versions from ' +
+    '/json/version — a host-side browser-use agent can then drive the guest at DOM level via ' +
+    '/json/list and the websocket debugger URLs. Needs a sandbox started with network on or firewall.',
+  inputSchema: {
+    port: z.number().int().min(1024).max(65535).optional().describe('Default 9222.'),
+    startUrl: z.string().optional().describe('Open this URL instead of about:blank.'),
+  },
+}, tool(async (a) => text(await sbx.edgeDebug(a))));
 
 server.registerTool('sandbox_type', {
   title: 'Send keys in sandbox',

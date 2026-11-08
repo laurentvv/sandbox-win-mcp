@@ -1,0 +1,461 @@
+{
+  "file": "suspicious.ps1",
+  "hostPath": "D:\\GIT\\sandbox-win-mcp\\samples\\Suspicious\\suspicious.ps1",
+  "sha256": "1e30d760a5490e41c4f04df8aa40969c8e93e828c04ba0aea39510cd1d7ad175",
+  "args": "",
+  "startedAt": "2026-11-08T01:05:57.149Z",
+  "shots": [
+    {
+      "name": "t+5s",
+      "path": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-010557\\out\\screenshots\\001-t_5s.png",
+      "width": 2032,
+      "height": 1111
+    },
+    {
+      "name": "t+24s",
+      "path": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-010557\\out\\screenshots\\002-t_24s.png",
+      "width": 2032,
+      "height": 1111
+    },
+    {
+      "name": "end",
+      "path": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-010557\\out\\screenshots\\003-end.png",
+      "width": 2032,
+      "height": 1111
+    }
+  ],
+  "windows": [],
+  "crashes": [],
+  "sandbox": {
+    "id": "19fcbc29-61e6-4770-ae63-8da92a467b38",
+    "epoch": "83682889-9bea-4738-bc32-805a8da3f51d",
+    "network": "firewall",
+    "bootSeconds": 10.917
+  },
+  "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-010557",
+  "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-010557\\out",
+  "since": "2026-11-08T02:06:12.9053570+01:00",
+  "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\WDAGUtilityAccount\\Downloads\\suspicious.ps1\"",
+  "rootPid": 9040,
+  "exitCode": 0,
+  "stoppedEarly": true,
+  "watchedSeconds": 32.171,
+  "launchedAt": "2026-11-08T02:06:23.1289816+01:00",
+  "tree": [
+    {
+      "time": "2026-11-08T02:06:23.1289816+01:00",
+      "pid": 9040,
+      "ppid": 8056,
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "commandLine": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\WDAGUtilityAccount\\Downloads\\suspicious.ps1\" ",
+      "parentPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 0
+    },
+    {
+      "time": "2026-11-08T02:06:23.1311534+01:00",
+      "pid": 9048,
+      "ppid": 9040,
+      "path": "C:\\Windows\\System32\\conhost.exe",
+      "commandLine": "\\??\\C:\\Windows\\system32\\conhost.exe 0xffffffff -ForceV1",
+      "parentPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 1
+    },
+    {
+      "time": "2026-11-08T02:06:24.4566252+01:00",
+      "pid": 8228,
+      "ppid": 9040,
+      "path": "C:\\Windows\\System32\\schtasks.exe",
+      "commandLine": "\"C:\\Windows\\system32\\schtasks.exe\" /Create /F /TN ContosoUpdate /SC ONLOGON /TR \"powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File \"C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\ContosoUpdater\\updater.ps1\"\"",
+      "parentPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 1
+    },
+    {
+      "time": "2026-11-08T02:06:24.5056302+01:00",
+      "pid": 8212,
+      "ppid": 9040,
+      "path": "C:\\Windows\\System32\\whoami.exe",
+      "commandLine": "\"C:\\Windows\\system32\\whoami.exe\" /all",
+      "parentPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 1
+    },
+    {
+      "time": "2026-11-08T02:06:24.5620038+01:00",
+      "pid": 4520,
+      "ppid": 9040,
+      "path": "C:\\Windows\\System32\\ipconfig.exe",
+      "commandLine": "\"C:\\Windows\\system32\\ipconfig.exe\" /all",
+      "parentPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 1
+    },
+    {
+      "time": "2026-11-08T02:06:24.5745991+01:00",
+      "pid": 8288,
+      "ppid": 9040,
+      "path": "C:\\Windows\\System32\\net.exe",
+      "commandLine": "\"C:\\Windows\\system32\\net.exe\" user",
+      "parentPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 1
+    },
+    {
+      "time": "2026-11-08T02:06:24.5796285+01:00",
+      "pid": 8480,
+      "ppid": 8288,
+      "path": "C:\\Windows\\System32\\net1.exe",
+      "commandLine": "C:\\Windows\\system32\\net1 user",
+      "parentPath": "C:\\Windows\\System32\\net.exe",
+      "user": "WDAGUtilityAccount",
+      "depth": 2
+    }
+  ],
+  "others": [
+    {
+      "time": "2026-11-08T02:06:28.0138242+01:00",
+      "pid": 8348,
+      "ppid": 1512,
+      "path": "C:\\Windows\\System32\\dllhost.exe",
+      "commandLine": "C:\\Windows\\system32\\DllHost.exe /Processid:{7966B4D8-4FDC-4126-A10B-39A3209AD251}",
+      "parentPath": "C:\\Windows\\System32\\svchost.exe",
+      "user": "55C6CD98-9015-4$"
+    },
+    {
+      "time": "2026-11-08T02:06:28.0359251+01:00",
+      "pid": 8388,
+      "ppid": 1512,
+      "path": "C:\\Windows\\System32\\dllhost.exe",
+      "commandLine": "C:\\Windows\\system32\\DllHost.exe /Processid:{973D20D7-562D-44B9-B70B-5A0F49CCDF3F}",
+      "parentPath": "C:\\Windows\\System32\\svchost.exe",
+      "user": "55C6CD98-9015-4$"
+    },
+    {
+      "time": "2026-11-08T02:06:32.0670167+01:00",
+      "pid": 8788,
+      "ppid": 4500,
+      "path": "C:\\Windows\\System32\\wlrmdr.exe",
+      "commandLine": " -c -s 0 -f 0 -t Empty -m Empty -a 0 -u Empty",
+      "parentPath": "C:\\Windows\\System32\\winlogon.exe",
+      "user": "55C6CD98-9015-4$"
+    },
+    {
+      "time": "2026-11-08T02:06:32.3839718+01:00",
+      "pid": 8516,
+      "ppid": 1784,
+      "path": "C:\\Windows\\System32\\rgnupdt.exe",
+      "commandLine": "\"C:\\Windows\\system32\\rgnupdt.exe\" 1",
+      "parentPath": "C:\\Windows\\System32\\svchost.exe",
+      "user": "55C6CD98-9015-4$"
+    },
+    {
+      "time": "2026-11-08T02:06:32.3875402+01:00",
+      "pid": 6708,
+      "ppid": 8516,
+      "path": "C:\\Windows\\System32\\conhost.exe",
+      "commandLine": "\\??\\C:\\Windows\\system32\\conhost.exe 0xffffffff -ForceV1",
+      "parentPath": "C:\\Windows\\System32\\rgnupdt.exe",
+      "user": "WDAGUtilityAccount"
+    },
+    {
+      "time": "2026-11-08T02:06:40.1305630+01:00",
+      "pid": 8688,
+      "ppid": 1512,
+      "path": "C:\\Windows\\System32\\wbem\\WmiPrvSE.exe",
+      "commandLine": "C:\\Windows\\system32\\wbem\\wmiprvse.exe -Embedding",
+      "parentPath": "C:\\Windows\\System32\\svchost.exe",
+      "user": "55C6CD98-9015-4$"
+    },
+    {
+      "time": "2026-11-08T09:28:48.8550859+01:00",
+      "pid": 336,
+      "ppid": 4,
+      "path": "",
+      "commandLine": "",
+      "parentPath": "",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:48.8550959+01:00",
+      "pid": 376,
+      "ppid": 4,
+      "path": "Registry",
+      "commandLine": "",
+      "parentPath": "",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:48.8611456+01:00",
+      "pid": 1104,
+      "ppid": 4,
+      "path": "C:\\Windows\\System32\\smss.exe",
+      "commandLine": "",
+      "parentPath": "",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.3112300+01:00",
+      "pid": 1208,
+      "ppid": 1104,
+      "path": "C:\\Windows\\System32\\setupcl.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.3309437+01:00",
+      "pid": 1228,
+      "ppid": 1104,
+      "path": "C:\\Windows\\System32\\smss.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.3763120+01:00",
+      "pid": 1236,
+      "ppid": 1228,
+      "path": "C:\\Windows\\System32\\csrss.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.4147918+01:00",
+      "pid": 1296,
+      "ppid": 1104,
+      "path": "C:\\Windows\\System32\\smss.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.4172834+01:00",
+      "pid": 1304,
+      "ppid": 1228,
+      "path": "C:\\Windows\\System32\\wininit.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.4176361+01:00",
+      "pid": 1312,
+      "ppid": 1296,
+      "path": "C:\\Windows\\System32\\csrss.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.4354521+01:00",
+      "pid": 1372,
+      "ppid": 1296,
+      "path": "C:\\Windows\\System32\\winlogon.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\smss.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.4930116+01:00",
+      "pid": 1460,
+      "ppid": 1304,
+      "path": "C:\\Windows\\System32\\services.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\wininit.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.5457786+01:00",
+      "pid": 1480,
+      "ppid": 1304,
+      "path": "C:\\Windows\\System32\\LsaIso.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\wininit.exe",
+      "user": "-"
+    },
+    {
+      "time": "2026-11-08T09:28:49.5593689+01:00",
+      "pid": 1492,
+      "ppid": 1304,
+      "path": "C:\\Windows\\System32\\lsass.exe",
+      "commandLine": "",
+      "parentPath": "C:\\Windows\\System32\\wininit.exe",
+      "user": "-"
+    }
+  ],
+  "stillRunning": [],
+  "lookups": [
+    {
+      "name": "c2.contoso-updates.example",
+      "pid": 9040,
+      "time": "2026-11-08T02:06:37.4450743+01:00",
+      "ok": false
+    }
+  ],
+  "connections": [
+    {
+      "time": "2026-11-08T02:06:37.5938642+01:00",
+      "pid": 9040,
+      "blocked": true,
+      "path": "C:\\windows\\system32\\windowspowershell\\v1.0\\powershell.exe",
+      "address": "198.51.100.7",
+      "port": 4444,
+      "protocol": "TCP",
+      "count": 1
+    },
+    {
+      "time": "2026-11-08T02:06:37.5698734+01:00",
+      "pid": 9040,
+      "blocked": true,
+      "path": "C:\\windows\\system32\\windowspowershell\\v1.0\\powershell.exe",
+      "address": "203.0.113.10",
+      "port": 80,
+      "protocol": "TCP",
+      "count": 1
+    }
+  ],
+  "otherLookups": [
+    "wpad",
+    "www.msftconnecttest.com",
+    "www.bing.com",
+    "tas02.sls.update.microsoft.com",
+    "login.live.com",
+    "fd.api.iris.microsoft.com"
+  ],
+  "otherConnections": [],
+  "diff": {
+    "ms": 1270,
+    "registry": {
+      "changedCount": 0,
+      "changed": [],
+      "addedGroups": 7,
+      "addedCount": 8,
+      "removedGroups": 0,
+      "removed": [],
+      "removedCount": 0,
+      "added": [
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo\\SecurityApplied"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\CPSS\\SecurityApplied"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\CPSS\\Store\\AdvertisingInfo\\SecurityApplied"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\CPSS\\Store\\SecurityApplied"
+        },
+        {
+          "items": 1,
+          "container": true,
+          "path": "HKCU\\Software\\Microsoft\\Windows\\Winlogon"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKLM\\SOFTWARE\\Microsoft\\Tracing\\powershell_RASAPI32"
+        },
+        {
+          "items": 0,
+          "container": true,
+          "path": "HKLM\\SOFTWARE\\Microsoft\\Tracing\\powershell_RASMANCS"
+        }
+      ]
+    },
+    "services": [],
+    "values": [
+      {
+        "name": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ContosoUpdater",
+        "change": "added",
+        "after": "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File \"C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\ContosoUpdater\\updater.ps1\""
+      }
+    ],
+    "files": {
+      "changedCount": 0,
+      "changed": [],
+      "addedGroups": 4,
+      "addedCount": 5,
+      "executableCount": 2,
+      "removedGroups": 0,
+      "removed": [],
+      "addedBytes": 5345,
+      "removedCount": 0,
+      "executables": [
+        "C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\ContosoUpdater\\updater.ps1",
+        "C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\contoso.cmd"
+      ],
+      "added": [
+        {
+          "items": 0,
+          "container": true,
+          "path": "C:\\Users\\WDAGUtilityAccount\\AppData\\Local\\Microsoft\\Internet Explorer"
+        },
+        {
+          "items": 1,
+          "container": true,
+          "path": "C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\ContosoUpdater",
+          "bytes": 1578
+        },
+        {
+          "bytes": 151,
+          "path": "C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\contoso.cmd"
+        },
+        {
+          "bytes": 3616,
+          "path": "C:\\Windows\\System32\\Tasks\\ContosoUpdate"
+        }
+      ]
+    },
+    "programsRemoved": [],
+    "programsAdded": []
+  },
+  "kept": false,
+  "seconds": 79.313,
+  "findings": [
+    {
+      "level": "high",
+      "text": "starts itself with Windows: added `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ContosoUpdater` = `powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File \"C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\ContosoUpdater\\updater.ps1\"`"
+    },
+    {
+      "level": "high",
+      "text": "created a scheduled task: `ContosoUpdate`"
+    },
+    {
+      "level": "high",
+      "text": "put something in a Startup folder: `C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\contoso.cmd`"
+    },
+    {
+      "level": "medium",
+      "text": "wrote 2 runnable file(s): `C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\ContosoUpdater\\updater.ps1`, `C:\\Users\\WDAGUtilityAccount\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\contoso.cmd`"
+    },
+    {
+      "level": "medium",
+      "text": "ran built-in Windows tools that malware often uses: schtasks.exe, whoami.exe, ipconfig.exe, net.exe, net1.exe"
+    },
+    {
+      "level": "medium",
+      "text": "looked up 1 internet name(s): c2.contoso-updates.example"
+    },
+    {
+      "level": "medium",
+      "text": "tried to connect to 2 address(es): 198.51.100.7:4444, 203.0.113.10:80"
+    },
+    {
+      "level": "info",
+      "text": "started 6 other process(es)"
+    }
+  ],
+  "reportPath": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-010557\\out\\report.md"
+}

@@ -27,6 +27,15 @@ const ALLOWED_ROOTS = (process.env.SANDBOX_MCP_ALLOWED_ROOTS || '').split(';').m
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export const log = (...a) => console.error('[sbx]', ...a);
 
+/** Idle auto-stop minutes for a sandbox boot: explicit per call, sane bounds. */
+export function validateIdleMinutes(v) {
+  if (v === undefined || v === null || v === '') return IDLE_MINUTES;
+  if (typeof v === 'boolean') throw new Error(`idleMinutes must be an integer between 1 and 1440 (got ${JSON.stringify(v)})`);
+  const n = Number(v);
+  if (!Number.isInteger(n) || n < 1 || n > 1440) throw new Error(`idleMinutes must be an integer between 1 and 1440 (got ${JSON.stringify(v)})`);
+  return n;
+}
+
 // ---------- wsb CLI ----------
 
 function wsb(args, timeoutMs = 120_000) {
@@ -258,7 +267,7 @@ async function call(op, params = {}, timeoutMs = 60_000, target) {
   const s = target || await requireSandbox();
   const t = Date.now();
   try {
-    const mutates = ['launch', 'click', 'keys', 'uiaction', 'smartclick'].includes(op) ||
+    const mutates = ['launch', 'click', 'drag', 'keys', 'uiaction', 'smartclick'].includes(op) ||
       (op === 'deploy_apply' && (params.launch || params.restart)) ||
       (op === 'screenshot' && (params.windowTitle || params.pid));
     const invoke = () => agentCall(s, op, params, timeoutMs);
@@ -296,8 +305,9 @@ function minimizeSandboxWindow() {
  * Boot a fresh sandbox and bring up the guest agent.
  * network: 'on' (default), 'firewall' (guest firewall blocks outbound; agent over TCP), 'off' (no network adapter; agent over shared-folder mailbox).
  */
-export async function startSandbox({ network = 'on', internet, memoryMB, window = 'normal', vGpu = true } = {}) {
+export async function startSandbox({ network = 'on', internet, memoryMB, window = 'normal', vGpu = true, idleMinutes } = {}) {
   if (internet === false && network === 'on') network = 'off';
+  const idle = validateIdleMinutes(idleMinutes);
   if (!['on', 'firewall', 'off'].includes(network)) throw new Error(`network must be on, firewall or off (got ${network})`);
   const existing = await listSandboxes();
   if (existing.length) {
@@ -367,7 +377,7 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
       await wsb(['exec', '--id', id, '-r', 'System', '-c',
         'cmd /c "reg add HKLM\\SYSTEM\\CurrentControlSet\\Control\\CI\\Policy /v VerifiedAndReputablePolicyState /t REG_DWORD /d 0 /f && CiTool.exe --refresh --json"']);
     }
-    const agentArgs = `-Port ${AGENT_PORT} -IdleMinutes ${IDLE_MINUTES}${offline ? ' -Mailbox' : ''}`;
+    const agentArgs = `-Port ${AGENT_PORT} -IdleMinutes ${idle}${offline ? ' -Mailbox' : ''}`;
     await wsb(['exec', '--id', id, '-r', 'ExistingLogin', '-c',
       `cmd /c start /min powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File ${GUEST.agent}\\agent.ps1 ${agentArgs}`]);
     writeState(target); verifiedId = `${id}:${epoch}`;
@@ -573,6 +583,60 @@ export async function click({ x, y, button, double, coordinates = 'screen', capt
     captureId = shot.captureId;
   }
   return call('click', { x: sx, y: sy, button, double, captureId }, 60_000, s);
+}
+
+/** Mouse-down at (x1,y1), animated move to (x2,y2), mouse-up. Coordinates as for click(). */
+export async function drag({ x1, y1, x2, y2, durationMs, coordinates = 'screen', captureId }) {
+  if (!['screen', 'screenshot'].includes(coordinates)) throw new Error('coordinates must be screen or screenshot.');
+  if (![x1, y1, x2, y2].every(Number.isFinite)) throw new Error('x1, y1, x2 and y2 must be finite numbers.');
+  const dur = durationMs === undefined ? 400 : Number(durationMs);
+  if (!Number.isFinite(dur) || dur < 0 || dur > 10_000) throw new Error('durationMs must be between 0 and 10000.');
+  let sx1 = x1, sy1 = y1, sx2 = x2, sy2 = y2;
+  const s = await requireSandbox();
+  if (coordinates === 'screenshot') {
+    const shot = captureId ? s.captures?.[captureId] : s.lastShots?.[shotOwner];
+    ({ x: sx1, y: sy1 } = mapCapturePoint(shot, x1, y1));
+    ({ x: sx2, y: sy2 } = mapCapturePoint(shot, x2, y2));
+    captureId = shot.captureId;
+  }
+  return call('drag', { x1: sx1, y1: sy1, x2: sx2, y2: sy2, durationMs: dur, captureId }, 60_000, s);
+}
+
+/**
+ * Launch guest Edge with remote debugging and make the DevTools endpoint reachable from the
+ * HOST (CDP binds 127.0.0.1 in the guest; a netsh portproxy relays it on the sandbox IP).
+ * Returns the HTTP base URL — /json/version, /json/list and the websocket debugger URLs then
+ * drive the guest browser at DOM level (mission M3). Requires network=on|firewall.
+ */
+export async function edgeDebug({ port = 9222, startUrl } = {}) {
+  if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('port must be an integer between 1024 and 65535.');
+  const s = await requireSandbox();
+  if (s.network === 'off') throw new Error('Edge debugging needs host<->guest networking; boot the sandbox with network on or firewall.');
+  const find = await exec({ command:
+    `@("\${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe", "$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1` });
+  const edgePath = (find.stdout ?? '').trim().split(/\r?\n/).filter(Boolean).pop();
+  if (!edgePath) throw new Error('msedge.exe not found in the guest.');
+  // Own user-data-dir => own browser process (no delegation to an existing instance).
+  const args = `--remote-debugging-port=${port} --user-data-dir=C:\\sbx\\edge-debug --no-first-run --no-default-browser-check ${startUrl ?? 'about:blank'}`;
+  const launchInfo = await launch({ path: edgePath, args, waitForWindowSec: 30 });
+  // Relay 0.0.0.0:port -> 127.0.0.1:port and open the guest firewall for it (like the agent port).
+  await exec({ command:
+    `cmd /c "netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=${port} connectaddress=127.0.0.1 connectport=${port} & netsh advfirewall firewall add rule name=sbx-edge-debug dir=in action=allow protocol=TCP localport=${port}"`,
+    timeoutSec: 60 });
+  const base = `http://${s.ip}:${port}`;
+  const deadline = Date.now() + 20_000;
+  let version = null, lastErr = null;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(`${base}/json/version`, { signal: AbortSignal.timeout(2000) });
+      if (res.ok) { version = await res.json(); break; }
+      lastErr = new Error(`HTTP ${res.status}`);
+    } catch (e) { lastErr = e; }
+    await sleep(500);
+  }
+  if (!version) throw new Error(`Edge DevTools endpoint did not answer at ${base}/json/version (${lastErr?.message}).`);
+  audit(s, { op: 'edgedebug', port, pid: launchInfo.pid, ok: true });
+  return { pid: launchInfo.pid, port, url: base, version: version.Browser, protocol: version['Protocol-Version'], userAgent: version['User-Agent'], webSocketDebuggerUrl: version.webSocketDebuggerUrl };
 }
 
 /**

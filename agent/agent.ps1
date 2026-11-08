@@ -237,6 +237,30 @@ function Op-Click($req) {
     @{ x = [int]$req.x; y = [int]$req.y }
 }
 
+function Op-Drag($req) {
+    # Mouse-down at (x1,y1), interpolated move to (x2,y2), mouse-up - the gesture charmap grids,
+    # sliders and file lists need. Raw sandbox screen pixels (the host maps capture coords).
+    $x1 = [int]$req.x1; $y1 = [int]$req.y1; $x2 = [int]$req.x2; $y2 = [int]$req.y2
+    $steps = 15
+    $duration = [int](Get-Opt $req.durationMs 400)
+    if ($duration -lt 0) { $duration = 0 }
+    $perStep = [math]::Min(60, [math]::Floor($duration / $steps))
+    if (-not [Sbx.Native]::SetCursorPos($x1, $y1)) {
+        throw 'desktop not interactive (locked / secure desktop / UAC): SetCursorPos failed'
+    }
+    Start-Sleep -Milliseconds 60
+    [Sbx.Native]::mouse_event(0x02, 0, 0, 0, [IntPtr]::Zero)  # left button down
+    for ($i = 1; $i -le $steps; $i++) {
+        $t = $i / $steps
+        $x = [int][math]::Round($x1 + ($x2 - $x1) * $t)
+        $y = [int][math]::Round($y1 + ($y2 - $y1) * $t)
+        [void][Sbx.Native]::SetCursorPos($x, $y)
+        if ($perStep -gt 0) { Start-Sleep -Milliseconds $perStep }
+    }
+    [Sbx.Native]::mouse_event(0x04, 0, 0, 0, [IntPtr]::Zero)  # left button up
+    @{ x1 = $x1; y1 = $y1; x2 = $x2; y2 = $y2; steps = $steps; durationMs = $duration }
+}
+
 function Op-Keys($req) {
     if ($req.windowTitle -or $req.pid) { Focus-Window (Find-Window $req).MainWindowHandle }
     $keys = [string]$req.keys
@@ -298,7 +322,7 @@ function Invoke-Request([string]$line) {
         $envelope = $line | ConvertFrom-Json
         if ($envelope.counter -gt 0 -and $envelope.counter -le 9007199254740991) { $counter = [long]$envelope.counter }
         $req = $protocol.Open($line, 'request', 0) | ConvertFrom-Json
-        if ($req.op -in @('screenshot', 'click', 'keys', 'uiaction', 'smartclick')) { Assert-InteractiveDesktop }
+        if ($req.op -in @('screenshot', 'click', 'drag', 'keys', 'uiaction', 'smartclick')) { Assert-InteractiveDesktop }
         $result = switch ($req.op) {
             'ping'       { @{ user = "$env:USERDOMAIN\$env:USERNAME"; computer = $env:COMPUTERNAME; pid = $PID
                              epoch = $identity.epoch; protocolVersion = 2; agentVersion = $identity.agentVersion; agentSha256 = $agentHash } }
@@ -314,6 +338,7 @@ function Invoke-Request([string]$line) {
             'screenshot' { Op-Screenshot $req }
             'windows'    { , (Op-Windows $req) }
             'click'      { Op-Click $req }
+            'drag'       { Op-Drag $req }
             'keys'       { Op-Keys $req }
             'uitree'     { Op-UiTree $req }
             'uiaction'   { Op-UiAction $req }

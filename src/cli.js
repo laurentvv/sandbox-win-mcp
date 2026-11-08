@@ -74,6 +74,8 @@ Step by step
                                      Screenshot the desktop or one window; prints the PNG path
   click <x> <y> [--right] [--double] [--coordinates screenshot --capture-id <id>]
                                      Click at screen pixels (default), or pixels in a specific preview
+  drag <x1> <y1> <x2> <y2> [--duration <ms>]
+                                     Mouse-down, animated move, mouse-up (grid selections, sliders)
   type <text> [--keys] [--window <title>] [--pid <pid>]
                                      Type text (--keys: SendKeys syntax like {ENTER} or ^s)
   ui [tree] [--pid <pid>|--window <title>] [--depth <n>] [--max <n>]
@@ -103,7 +105,7 @@ off = no network adapter at all, the strongest isolation (--offline is the same)
 Data: ${sbx.HOME}`;
 
 // Options that take a value; everything else starting with -- is a boolean flag.
-const VALUE_OPTS = new Set(['network', 'memory', 'exe', 'args', 'wait', 'test', 'collect', 'cwd', 'timeout', 'window', 'pid', 'name', 'since',
+const VALUE_OPTS = new Set(['network', 'memory', 'idle-minutes', 'exe', 'args', 'wait', 'test', 'collect', 'cwd', 'timeout', 'window', 'pid', 'name', 'since',
   'id', 'type', 'index', 'value', 'depth', 'max', 'uninstall', 'uninstall-args', 'exclude', 'duration', 'every', 'launch', 'provision', 'cert', 'deps', 'app-id',
   'coordinates', 'capture-id', 'fps', 'max-frames']);
 const REPEAT_OPTS = new Set(['collect', 'exclude']);
@@ -148,6 +150,7 @@ function startOpts(opt) {
     memoryMB: num(opt.memory, '--memory'),
     vGpu: !opt['no-gpu'],
     window: opt.minimized ? 'minimized' : 'normal',
+    idleMinutes: num(opt['idle-minutes'], '--idle-minutes'),
   };
 }
 
@@ -287,6 +290,13 @@ async function main(argv) {
       need(2, 'click <x> <y> [--right] [--double]');
       out(opt, await sbx.click({ x: num(pos[0], 'x'), y: num(pos[1], 'y'), button: opt.right ? 'right' : 'left', double: !!opt.double,
         coordinates: opt.coordinates, captureId: opt['capture-id'] }), 'ok');
+      return 0;
+    }
+
+    case 'drag': {
+      need(4, 'drag <x1> <y1> <x2> <y2> [--duration <ms>] [--coordinates screenshot --capture-id <id>]');
+      out(opt, await sbx.drag({ x1: num(pos[0], 'x1'), y1: num(pos[1], 'y1'), x2: num(pos[2], 'x2'), y2: num(pos[3], 'y2'),
+        durationMs: num(opt.duration, '--duration'), coordinates: opt.coordinates, captureId: opt['capture-id'] }), 'ok');
       return 0;
     }
 
