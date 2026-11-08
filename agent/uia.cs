@@ -41,6 +41,8 @@ public static class SbxUia
     [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr h);
     [DllImport("user32.dll")] static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] static extern void mouse_event(uint f, uint x, uint y, uint d, IntPtr e);
+    [DllImport("user32.dll")] static extern void keybd_event(byte k, byte s, uint f, IntPtr e);
+    [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr h);
 
     static T Safe<T>(Func<T> f) { try { return f(); } catch { return default(T); } }
     static T Pattern<T>(IUIAutomationElement e, int id) where T : class { try { return e.GetCurrentPattern(id) as T; } catch { return null; } }
@@ -244,6 +246,182 @@ public static class SbxUia
         SetCursorPos(x, y); Thread.Sleep(50);
         uint down = right ? 0x08u : 0x02u, up = right ? 0x10u : 0x04u;
         for (int i = 0; i < (dbl ? 2 : 1); i++) { mouse_event(down, 0, 0, 0, IntPtr.Zero); mouse_event(up, 0, 0, 0, IntPtr.Zero); Thread.Sleep(60); }
+    }
+
+    // ---------- smart input (UIA-first ladder, M2) ----------
+
+    /** Observable state of an element, for before/after effect checks. */
+    static string Fingerprint(Dictionary<string, object> d)
+    {
+        var parts = new List<string>();
+        foreach (string k in new[] { "name", "value", "toggled", "selected" })
+            if (d.ContainsKey(k)) parts.Add(k + "=" + Convert.ToString(d[k]));
+        return string.Join(";", parts.ToArray());
+    }
+
+    /** HWND of the top-level window that contains the element (0 when UIA cannot tell). */
+    static IntPtr TopHandle(IUIAutomationElement e)
+    {
+        var w = A.ControlViewWalker;
+        var cur = e;
+        while (true)
+        {
+            var parent = Safe(() => w.GetParentElement(cur));
+            if (parent == null) break;
+            cur = parent;
+        }
+        // CurrentNativeWindowHandle is IntPtr in the generated interop; Safe defaults to IntPtr.Zero.
+        return Safe(() => cur.CurrentNativeWindowHandle);
+    }
+
+    static Dictionary<string, object> Attempt(List<Dictionary<string, object>> attempts, string strategy, System.Action act)
+    {
+        var sw = Stopwatch.StartNew();
+        var rec = new Dictionary<string, object> { { "strategy", strategy } };
+        try
+        {
+            act();
+            rec["ok"] = true;
+        }
+        catch (Exception ex) { rec["ok"] = false; rec["error"] = ex.Message; }
+        rec["ms"] = sw.ElapsedMilliseconds;
+        attempts.Add(rec);
+        return rec;
+    }
+
+    /// <summary>
+    /// Click a control by selector, UIA first: Invoke/Toggle/Select/ExpandCollapse pattern, then
+    /// LegacyIAccessible default action, then UIA SetFocus + Enter (activates where mouse input is
+    /// swallowed, e.g. Chromium web content), then a focus-verified SendInput click at the element.
+    /// Every rung is recorded; the winner is checked for visible effect (element gone / state changed).
+    /// A control pattern that executes without throwing ends the ladder (patterns are authoritative);
+    /// the two synthetic rungs (focus-enter, sendinput-click) must show an effect to count.
+    /// </summary>
+    public static Dictionary<string, object> SmartClick(int pid, string title, string name, string automationId, string controlType,
+        int index, string verify, int timeoutMs)
+    {
+        verify = string.IsNullOrEmpty(verify) ? "auto" : verify.ToLowerInvariant();
+        return Run(() =>
+        {
+            var m = Matches(pid, title, name, automationId, controlType);
+            if (m.Count == 0) throw new InvalidOperationException("No element matches " + Selector(name, automationId, controlType) + ". Use uitree to see what is there.");
+            if (index >= m.Count) throw new InvalidOperationException(m.Count + " element(s) match " + Selector(name, automationId, controlType) + "; index " + index + " is out of range.");
+            var e = m[index];
+            var before = Describe(e, -1);
+            var attempts = new List<Dictionary<string, object>>();
+            var result = new Dictionary<string, object>();
+            result["element"] = before;
+            result["matches"] = m.Count;
+
+            Func<List<IUIAutomationElement>> rematch = () => Safe(() => Matches(pid, title, name, automationId, controlType));
+            Func<bool> gone = () => { var m2 = rematch(); return m2 == null || m2.Count == 0; };
+            Func<bool> changed = () =>
+            {
+                var m2 = rematch();
+                if (m2 == null || m2.Count <= index) return false;
+                var after = Safe(() => Describe(m2[index], -1));
+                return after != null && Fingerprint(after) != Fingerprint(before);
+            };
+            Func<bool> effect = () => gone() || changed();
+
+            string strategy = null;
+
+            // Rung A: native UIA control patterns, most reliable first.
+            var inv = Pattern<IUIAutomationInvokePattern>(e, InvokeId);
+            if (inv != null && (bool)Attempt(attempts, "uia-invoke", inv.Invoke)["ok"]) strategy = "uia-invoke";
+            if (strategy == null)
+            {
+                var tg = Pattern<IUIAutomationTogglePattern>(e, ToggleId);
+                if (tg != null && (bool)Attempt(attempts, "uia-toggle", tg.Toggle)["ok"]) strategy = "uia-toggle";
+            }
+            if (strategy == null)
+            {
+                var si = Pattern<IUIAutomationSelectionItemPattern>(e, SelectionItemId);
+                if (si != null && (bool)Attempt(attempts, "uia-select", si.Select)["ok"]) strategy = "uia-select";
+            }
+            if (strategy == null)
+            {
+                var ec = Pattern<IUIAutomationExpandCollapsePattern>(e, ExpandCollapseId);
+                if (ec != null)
+                {
+                    string strat = null;
+                    var rec = Attempt(attempts, "uia-expandcollapse", delegate
+                    {
+                        if (ec.CurrentExpandCollapseState == ExpandCollapseState.ExpandCollapseState_Collapsed) { ec.Expand(); strat = "expand"; }
+                        else { ec.Collapse(); strat = "collapse"; }
+                    });
+                    if ((bool)rec["ok"]) strategy = strat ?? "uia-expandcollapse";
+                }
+            }
+            if (strategy == null)
+            {
+                var la = Pattern<IUIAutomationLegacyIAccessiblePattern>(e, LegacyId);
+                if (la != null && !string.IsNullOrEmpty(Safe(() => la.CurrentDefaultAction))
+                    && (bool)Attempt(attempts, "uia-legacy-default", la.DoDefaultAction)["ok"]) strategy = "uia-legacy-default";
+            }
+
+            // Rung B: keyboard activation — UIA SetFocus + Enter. Works on web content that
+            // ignores synthesized mouse input (measured on the Google consent dialog).
+            if (strategy == null)
+            {
+                var rec = Attempt(attempts, "focus-enter", delegate
+                {
+                    e.SetFocus();
+                    Thread.Sleep(120);
+                    keybd_event(0x0D, 0, 0, IntPtr.Zero);
+                    keybd_event(0x0D, 0, 0x2, IntPtr.Zero);
+                });
+                if ((bool)rec["ok"])
+                {
+                    Thread.Sleep(350);
+                    if (verify == "none" || effect()) strategy = "focus-enter";
+                    else rec["ok"] = false; rec["error"] = "no visible effect";
+                }
+            }
+
+            // Rung C: focus-verified SendInput click at the element.
+            if (strategy == null)
+            {
+                bool focusVerified = false;
+                var rec = Attempt(attempts, "sendinput-click", delegate
+                {
+                    IntPtr top = TopHandle(e);
+                    try { e.SetFocus(); } catch { }
+                    if (top != IntPtr.Zero) { try { SetForegroundWindow(top); } catch { } }
+                    Thread.Sleep(120);
+                    IntPtr fg = GetForegroundWindow();
+                    focusVerified = top != IntPtr.Zero && fg == top;
+                    int x, y;
+                    tagPOINT p;
+                    if (e.GetClickablePoint(out p) != 0) { x = p.x; y = p.y; }
+                    else { tagRECT r = e.CurrentBoundingRectangle; x = (r.left + r.right) / 2; y = (r.top + r.bottom) / 2; }
+                    SetCursorPos(x, y); Thread.Sleep(50);
+                    mouse_event(0x02u, 0, 0, 0, IntPtr.Zero); mouse_event(0x04u, 0, 0, 0, IntPtr.Zero);
+                });
+                result["focusVerified"] = focusVerified;
+                if ((bool)rec["ok"])
+                {
+                    Thread.Sleep(350);
+                    if (verify == "none" || effect()) strategy = "sendinput-click";
+                    else rec["ok"] = false; rec["error"] = "no visible effect";
+                }
+            }
+
+            Thread.Sleep(200);
+            bool isGone = false, isChanged = false;
+            if (verify != "none") { isGone = gone(); isChanged = !isGone && changed(); }
+            bool verified = verify == "none" ? strategy != null
+                : verify == "gone" ? isGone
+                : verify == "state" ? isChanged
+                : strategy != null && (isGone || isChanged);
+
+            result["strategy"] = strategy;
+            result["did"] = strategy;
+            result["verified"] = verified;
+            result["verifyNote"] = isGone ? "element gone" : isChanged ? "element state changed" : strategy != null ? "no visible state change (pattern executed)" : "no strategy produced an effect";
+            result["attempts"] = attempts;
+            return result;
+        }, timeoutMs, () => { throw new TimeoutException("SmartClick took longer than " + timeoutMs + "ms (app not responding?)"); });
     }
 
     public static Dictionary<string, object> Wait(int pid, string title, string name, string automationId, string controlType, int timeoutMs)

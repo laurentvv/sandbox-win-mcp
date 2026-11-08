@@ -58,10 +58,19 @@ function Invoke-SbxUi {
     Invoke-Unwrapped { [SbxUia]::Act($ProcessId, $WindowTitle, $Name, $AutomationId, $ControlType, $Index, $Action, $Value, [int]($TimeoutSec * 1000)) }
 }
 
+function Invoke-SbxSmartClick {
+    # UIA-first activation ladder (see SbxUia::SmartClick): patterns, then focus+Enter, then a
+    # focus-verified SendInput click. Reports every attempt and the winning strategy.
+    param([int]$ProcessId, [string]$WindowTitle, [string]$Name, [string]$AutomationId, [string]$ControlType, [int]$Index = 0,
+          [ValidateSet('auto', 'gone', 'state', 'none')][string]$Verify = 'auto', [double]$TimeoutSec = 15)
+    Initialize-SbxUi
+    Invoke-Unwrapped { [SbxUia]::SmartClick($ProcessId, $WindowTitle, $Name, $AutomationId, $ControlType, $Index, $Verify, [int]($TimeoutSec * 1000)) }
+}
+
 function Wait-SbxUi {
     param([int]$ProcessId, [string]$WindowTitle, [string]$Name, [string]$AutomationId, [string]$ControlType, [double]$TimeoutSec = 30)
     Initialize-SbxUi
     Invoke-Unwrapped { [SbxUia]::Wait($ProcessId, $WindowTitle, $Name, $AutomationId, $ControlType, [int]($TimeoutSec * 1000)) }
 }
 
-Export-ModuleMember -Function Initialize-SbxUi, Get-SbxUiTree, Invoke-SbxUi, Wait-SbxUi
+Export-ModuleMember -Function Initialize-SbxUi, Get-SbxUiTree, Invoke-SbxUi, Invoke-SbxSmartClick, Wait-SbxUi

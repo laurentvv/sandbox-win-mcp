@@ -12,7 +12,7 @@ for the full per-file audit and the ten live lessons that drive the roadmap).
 
 ### What it keeps from upstream
 
-- stdio MCP server (Node 20+) with 27 tools + the `sbx` CLI sharing the same state
+- stdio MCP server (Node 20+) with 28 tools + the `sbx` CLI sharing the same state
 - guest agent = PowerShell + native UI Automation (zero runtime installs in the guest)
 - control channel: TCP (network on) or HKDF-encrypted shared-folder mailbox (offline)
 - hardened `.wsb` defaults: no clipboard/printer/mic/camera redirection, Protected Client
@@ -25,7 +25,7 @@ for the full per-file audit and the ten live lessons that drive the roadmap).
 |-----------|-------|-----------|
 | M0 ✅ | Bootstrap | fork + audit + reproducible smoke tests (`doctor`, MCP stdio handshake) |
 | M1 | Reliability | doctor v2 (wsb App-Execution-Alias resolution, **pending-reboot state**, orphan detection), **janitor** for headless `vmmemWindowsSandbox` orphans, conflict taxonomy |
-| M2 | Input engine | **UIA-first** strategy layer (Invoke/Toggle/Select/ExpandCollapse, then verified SendInput fallback), per-action strategy reporting, explicit key-vs-text modes |
+| M2 🟡 | Input engine | **landed (first cut)**: `sandbox_smart_click` UIA-first ladder with per-action strategy reporting + effect checks, explicit `mode: text\|keys` typing; acid test passed (consent wall dismissed in 1 call — [lab findings](docs/lab-input-findings.md)); selector hardening + scripted regression next |
 | M3 | Power features | optional **CDP passthrough** for guest Edge, stable JSON+markdown report schema, `SANDBOX_MCP_ALLOWED_ROOTS` hardening |
 | M4 | Delivery | one docs page per feature, samples, CHANGELOG, versioned releases, parity notes vs upstream v1.2.0 |
 

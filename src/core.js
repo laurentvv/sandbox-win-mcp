@@ -258,7 +258,7 @@ async function call(op, params = {}, timeoutMs = 60_000, target) {
   const s = target || await requireSandbox();
   const t = Date.now();
   try {
-    const mutates = ['launch', 'click', 'keys', 'uiaction'].includes(op) ||
+    const mutates = ['launch', 'click', 'keys', 'uiaction', 'smartclick'].includes(op) ||
       (op === 'deploy_apply' && (params.launch || params.restart)) ||
       (op === 'screenshot' && (params.windowTitle || params.pid));
     const invoke = () => agentCall(s, op, params, timeoutMs);
@@ -575,8 +575,37 @@ export async function click({ x, y, button, double, coordinates = 'screen', capt
   return call('click', { x: sx, y: sy, button, double, captureId }, 60_000, s);
 }
 
-export async function type({ keys, literal = true, windowTitle, pid }) {
-  return call('keys', { keys, literal, windowTitle, pid });
+/**
+ * Resolve how `keys` must be interpreted. Explicit modes only: 'text' types the string verbatim,
+ * 'keys' is SendKeys syntax ({ENTER}, ^s, %{F4}). The legacy `literal` boolean still maps for one
+ * release and earns a deprecation note; passing neither is an error, never a silent default.
+ */
+export function resolveTypeMode({ mode, literal } = {}) {
+  if (mode !== undefined) {
+    if (mode !== 'text' && mode !== 'keys') throw new Error(`mode must be 'text' or 'keys' (got ${JSON.stringify(mode)})`);
+    if (literal !== undefined && (mode === 'text') !== Boolean(literal)) {
+      throw new Error(`mode '${mode}' contradicts literal=${literal}; pass only mode.`);
+    }
+    return { literal: mode === 'text', deprecation: null };
+  }
+  if (literal !== undefined) return { literal: Boolean(literal), deprecation: 'literal is deprecated; pass mode: "text" or "keys"' };
+  throw new Error("Pass mode: 'text' to type text as-is, or 'keys' for SendKeys syntax like {ENTER} or ^s.");
+}
+
+export async function type({ keys, mode, literal, windowTitle, pid }) {
+  const resolved = resolveTypeMode({ mode, literal });
+  const r = await call('keys', { keys, literal: resolved.literal, windowTitle, pid });
+  return resolved.deprecation ? { ...r, deprecation: resolved.deprecation } : r;
+}
+
+/**
+ * UIA-first smart click: the guest tries Invoke/Toggle/Select/ExpandCollapse patterns, then the
+ * legacy IAccessible default action, then UIA focus + Enter, then a focus-verified SendInput
+ * click — and reports every attempt plus the winning strategy and an effect check.
+ */
+export async function smartClick({ windowTitle, pid, name, automationId, controlType, index, verify, timeoutSec } = {}) {
+  return call('smartclick', { windowTitle, pid, name, automationId, controlType, index, verify, timeoutSec },
+    ((timeoutSec ?? 15) + 30) * 1000);
 }
 
 // UI Automation: inspect and drive controls by name instead of pixels.

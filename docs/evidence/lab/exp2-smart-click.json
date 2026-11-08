@@ -1,0 +1,926 @@
+{
+  "lab": "input-lab",
+  "tag": "exp2",
+  "startedAt": "2026-11-08T00:53:32.210Z",
+  "server": {
+    "name": "sandbox-win-mcp",
+    "version": "2.0.0-alpha.2"
+  },
+  "boot": {
+    "id": "0e08fee8-b941-424e-86c5-670df7f98ea3",
+    "ip": "172.23.253.202",
+    "epoch": "dc2671ef-380c-41a4-87ec-f884534aa1da",
+    "identity": {
+      "protocolVersion": 2,
+      "agentVersion": "2.0.0-alpha.2",
+      "agentSha256": "28a40454ed7bea84556f456da46a40f564bfa0928b6b0c3fdb772869c9053bdd"
+    },
+    "network": "on",
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out",
+    "user": "55C6CD98-9015-4\\WDAGUtilityAccount",
+    "desktop": {
+      "sessionId": 1,
+      "captureWorks": true,
+      "top": 0,
+      "inputDesktop": "Default",
+      "width": 2032,
+      "ready": true,
+      "shellRunning": true,
+      "windowStation": "WinSta0",
+      "height": 1111,
+      "captureError": null,
+      "left": 0,
+      "threadDesktop": "Default",
+      "foregroundWindow": {
+        "title": "Administrator: Windows PowerShell 5.1",
+        "handle": "65926"
+      }
+    },
+    "desktopReadySeconds": 10.01,
+    "bootSeconds": 10.013,
+    "steps": [
+      "1.1s started 0e08fee8-b941-424e-86c5-670df7f98ea3",
+      "1.6s ip 172.23.253.202",
+      "2.3s folders shared",
+      "5.1s user session ready",
+      "9.9s agent up as 55C6CD98-9015-4\\WDAGUtilityAccount",
+      "10.0s desktop ready (Default input desktop, explorer, capture verified)"
+    ]
+  },
+  "targets": [
+    {
+      "name": "charmap",
+      "steps": [
+        {
+          "seq": 2,
+          "tool": "sandbox_launch",
+          "args": {
+            "path": "C:\\Windows\\System32\\charmap.exe",
+            "waitForWindowSec": 20
+          },
+          "note": "",
+          "ok": true,
+          "ms": 755,
+          "text": "{\n  \"hasExited\": false,\n  \"pid\": 3840,\n  \"windowTitle\": \"Character Map\",\n  \"launchedAt\": \"2026-11-08T01:53:42.8843689+01:00\"\n}"
+        },
+        {
+          "seq": 3,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 3840,
+            "name": "charmap-before"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 654,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\001-charmap-before.png; source bounds (22,65) 477x430; preview 477x430, scale 1; captureId 83bba7fb666942ad810c6362616e8c9d."
+        },
+        {
+          "seq": 4,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 3840,
+            "json": true,
+            "depth": 8
+          },
+          "note": "",
+          "ok": true,
+          "ms": 2077,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"Character Map\",\n      \"rect\": [\n        15,\n        65,\n        491,\n        437\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"Grille de caractères\",\n      \"automationId\": \"108\",\n      \"rect\": [\n        46,\n        145,\n        423,\n        253\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Text\",\n      \"name\": \"Characters to copy :\",\n      \"automationId\": \"107\",\n      \"rect\": [\n   "
+        },
+        {
+          "seq": 5,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 3840,
+            "name": "Select",
+            "controlType": "Button"
+          },
+          "note": "UIA click Select",
+          "ok": true,
+          "ms": 123,
+          "text": "invoke: Button \"Select\" #103 {invoke}",
+          "did": "invoke"
+        },
+        {
+          "seq": 6,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 3840,
+            "name": "Advanced view",
+            "controlType": "CheckBox",
+            "action": "read"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 102,
+          "text": "read: CheckBox \"Advanced view\" #119 [ ] {invoke,toggle}",
+          "did": "read"
+        },
+        {
+          "seq": 7,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 3840,
+            "name": "Advanced view",
+            "controlType": "CheckBox",
+            "action": "toggle"
+          },
+          "note": "UIA toggle Advanced view on",
+          "ok": true,
+          "ms": 92,
+          "text": "toggle: CheckBox \"Advanced view\" #119 [ ] {invoke,toggle}",
+          "did": "toggle"
+        },
+        {
+          "seq": 8,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 3840,
+            "json": true,
+            "depth": 8
+          },
+          "note": "",
+          "ok": true,
+          "ms": 130,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"Character Map\",\n      \"rect\": [\n        15,\n        65,\n        491,\n        586\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"Grille de caractères\",\n      \"automationId\": \"108\",\n      \"rect\": [\n        46,\n        145,\n        423,\n        253\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Text\",\n      \"name\": \"Characters to copy :\",\n      \"automationId\": \"107\",\n      \"rect\": [\n   "
+        },
+        {
+          "seq": 9,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 3840,
+            "name": "Advanced view",
+            "controlType": "CheckBox",
+            "action": "read"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 98,
+          "text": "read: CheckBox \"Advanced view\" #119 [x] {invoke,toggle}",
+          "did": "read"
+        },
+        {
+          "seq": 10,
+          "tool": "sandbox_click",
+          "args": {
+            "x": 130,
+            "y": 459,
+            "coordinates": "screen"
+          },
+          "note": "SendInput click on Advanced view @130,459",
+          "ok": true,
+          "ms": 229,
+          "text": "{\n  \"y\": 459,\n  \"x\": 130\n}"
+        },
+        {
+          "seq": 11,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 3840,
+            "name": "Advanced view",
+            "controlType": "CheckBox",
+            "action": "read"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 75,
+          "text": "read: CheckBox \"Advanced view\" #119 [ ] {invoke,toggle}",
+          "did": "read"
+        },
+        {
+          "seq": 12,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 3840,
+            "name": "Advanced view",
+            "controlType": "CheckBox",
+            "action": "toggle"
+          },
+          "note": "restore state",
+          "ok": true,
+          "ms": 94,
+          "text": "toggle: CheckBox \"Advanced view\" #119 [ ] {invoke,toggle}",
+          "did": "toggle"
+        },
+        {
+          "seq": 13,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 3840,
+            "name": "charmap-after"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 533,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\002-charmap-after.png; source bounds (22,65) 477x579; preview 477x579, scale 1; captureId 2bb5e78ac3d34116ace080b2a714c795."
+        },
+        {
+          "seq": 14,
+          "tool": "sandbox_exec",
+          "args": {
+            "command": "Stop-Process -Id 3840 -Force -ErrorAction SilentlyContinue"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 1870,
+          "text": "exitCode: 0  (1852ms)",
+          "did": "exitCode"
+        }
+      ],
+      "verdicts": [
+        {
+          "what": "uia tree visible",
+          "result": "27 nodes",
+          "sample": [
+            {
+              "depth": 0,
+              "type": "Window",
+              "name": "Character Map",
+              "rect": [
+                15,
+                65,
+                491,
+                437
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "Pane",
+              "name": "Grille de caractères",
+              "automationId": "108",
+              "rect": [
+                46,
+                145,
+                423,
+                253
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "Text",
+              "name": "Characters to copy :",
+              "automationId": "107",
+              "rect": [
+                34,
+                405,
+                120,
+                39
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "Edit",
+              "name": "Characters to copy :",
+              "automationId": "104",
+              "rect": [
+                158,
+                405,
+                165,
+                26
+              ],
+              "value": "\r",
+              "actions": [
+                "setvalue"
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "Button",
+              "name": "Select",
+              "automationId": "103",
+              "rect": [
+                329,
+                405,
+                75,
+                23
+              ],
+              "actions": [
+                "invoke"
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "Button",
+              "name": "Copy",
+              "automationId": "102",
+              "enabled": false,
+              "rect": [
+                410,
+                405,
+                75,
+                23
+              ],
+              "actions": [
+                "invoke"
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "CheckBox",
+              "name": "Advanced view",
+              "automationId": "119",
+              "rect": [
+                34,
+                449,
+                192,
+                20
+              ],
+              "toggled": false,
+              "actions": [
+                "invoke",
+                "toggle"
+              ]
+            },
+            {
+              "depth": 1,
+              "type": "Text",
+              "name": "Selected Character :",
+              "automationId": "500",
+              "rect": [
+                34,
+                588,
+                125,
+                39
+              ]
+            }
+          ]
+        },
+        {
+          "what": "UIA click on Win32 Button",
+          "result": "ok",
+          "detail": "invoke: Button \"Select\" #103 {invoke}"
+        },
+        {
+          "what": "UIA setvalue + readback on Win32 Edit",
+          "result": "skipped: Search edit not found"
+        },
+        {
+          "what": "SendInput pixel click on Win32 CheckBox (state readback)",
+          "result": "WORKED (state flipped)",
+          "detail": "read: CheckBox \"Advanced view\" #119 [x] {invoke,toggle} -> read: CheckBox \"Advanced view\" #119 [ ] {invoke,toggle}"
+        }
+      ]
+    },
+    {
+      "name": "regedit",
+      "steps": [
+        {
+          "seq": 15,
+          "tool": "sandbox_launch",
+          "args": {
+            "path": "regedit.exe",
+            "waitForWindowSec": 20
+          },
+          "note": "",
+          "ok": true,
+          "ms": 244,
+          "text": "{\n  \"hasExited\": false,\n  \"pid\": 7452,\n  \"windowTitle\": \"Éditeur du Registre\",\n  \"launchedAt\": \"2026-11-08T01:53:50.5209822+01:00\"\n}"
+        },
+        {
+          "seq": 16,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 7452,
+            "json": true,
+            "depth": 6
+          },
+          "note": "",
+          "ok": true,
+          "ms": 86,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"Éditeur du Registre\",\n      \"rect\": [\n        130,\n        130,\n        1524,\n        776\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Tree\",\n      \"name\": \"\",\n      \"automationId\": \"1\",\n      \"rect\": [\n        138,\n        202,\n        216,\n        696\n      ]\n    },\n    {\n      \"depth\": 2,\n      \"type\": \"TreeItem\",\n      \"name\": \"Ordinateur\",\n      \"rect\": [\n        178,\n        204,\n        61,\n        18\n "
+        },
+        {
+          "seq": 17,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 7452,
+            "name": "HKEY_LOCAL_MACHINE",
+            "controlType": "TreeItem",
+            "action": "select"
+          },
+          "note": "UIA select HKLM",
+          "ok": true,
+          "ms": 71,
+          "text": "select: TreeItem \"HKEY_LOCAL_MACHINE\" {setvalue,select,expand,collapse}",
+          "did": "select"
+        },
+        {
+          "seq": 18,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 7452,
+            "name": "HKEY_LOCAL_MACHINE",
+            "controlType": "TreeItem",
+            "action": "expand"
+          },
+          "note": "UIA expand HKLM",
+          "ok": true,
+          "ms": 96,
+          "text": "expand: TreeItem \"HKEY_LOCAL_MACHINE\" (selected) {setvalue,select,expand,collapse}",
+          "did": "expand"
+        },
+        {
+          "seq": 19,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 7452,
+            "json": true,
+            "depth": 7
+          },
+          "note": "",
+          "ok": true,
+          "ms": 109,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"Éditeur du Registre\",\n      \"rect\": [\n        130,\n        130,\n        1524,\n        776\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Tree\",\n      \"name\": \"\",\n      \"automationId\": \"1\",\n      \"rect\": [\n        138,\n        202,\n        216,\n        696\n      ]\n    },\n    {\n      \"depth\": 2,\n      \"type\": \"ScrollBar\",\n      \"name\": \"Horizontal\",\n      \"automationId\": \"NonClientHorizontalScrollBar\",\n      \"rect"
+        },
+        {
+          "seq": 20,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 7452,
+            "name": "SOFTWARE",
+            "controlType": "TreeItem",
+            "action": "select"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 74,
+          "text": "select: TreeItem \"SOFTWARE\" {setvalue,select,expand,collapse}",
+          "did": "select"
+        },
+        {
+          "seq": 21,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 7452,
+            "name": "regedit-after"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 568,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\003-regedit-after.png; source bounds (137,130) 1510x769; preview 1280x652, scale 0.847682119205298; captureId a1c4f165762044ae8cf3ebf4c6734adc."
+        },
+        {
+          "seq": 22,
+          "tool": "sandbox_exec",
+          "args": {
+            "command": "Stop-Process -Id 7452 -Force -ErrorAction SilentlyContinue"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 1200,
+          "text": "exitCode: 0  (1194ms)",
+          "did": "exitCode"
+        }
+      ],
+      "verdicts": [
+        {
+          "what": "tree items exposed via UIA",
+          "result": "HKLM TreeItem found",
+          "nodes": 26
+        },
+        {
+          "what": "UIA SelectionItemPattern on TreeItem",
+          "result": "ok",
+          "detail": "select: TreeItem \"HKEY_LOCAL_MACHINE\" {setvalue,select,expand,collapse}"
+        },
+        {
+          "what": "UIA ExpandCollapsePattern on TreeItem",
+          "result": "ok",
+          "detail": "expand: TreeItem \"HKEY_LOCAL_MACHINE\" (selected) {setvalue,select,expand,collapse}"
+        },
+        {
+          "what": "UIA select child TreeItem (SOFTWARE)",
+          "result": "ok"
+        }
+      ]
+    },
+    {
+      "name": "edge",
+      "steps": [
+        {
+          "seq": 23,
+          "tool": "sandbox_exec",
+          "args": {
+            "command": "@(\"${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe\", \"$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe\", \"$env:LOCALAPPDATA\\Microsoft\\Edge\\Application\\msedge.exe\") | Where-Object { Test-Path $_ } | Select-Object -First 1; if (-not ($?)) { '' }"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 1341,
+          "text": "exitCode: 0  (1334ms)\n--- stdout ---\nC:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\r\n",
+          "did": "exitCode"
+        },
+        {
+          "seq": 24,
+          "tool": "sandbox_launch",
+          "args": {
+            "path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+            "args": "--no-first-run --no-default-browser-check about:blank",
+            "waitForWindowSec": 30
+          },
+          "note": "",
+          "ok": true,
+          "ms": 2115,
+          "text": "{\n  \"hasExited\": false,\n  \"pid\": 5124,\n  \"windowTitle\": \"about:blank - Profil 1 – Microsoft​ Edge\",\n  \"launchedAt\": \"2026-11-08T01:53:56.3161374+01:00\"\n}"
+        },
+        {
+          "seq": 25,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 5124,
+            "name": "edge-blank"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 509,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\004-edge-blank.png; source bounds (17,10) 987x1036; preview 987x1036, scale 1; captureId 5ff4669f386b4ca0847a5c32918f265f."
+        },
+        {
+          "seq": 26,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 5124,
+            "json": true,
+            "depth": 10
+          },
+          "note": "",
+          "ok": true,
+          "ms": 142,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"about:blank - Profil 1 – Microsoft​ Edge\",\n      \"rect\": [\n        10,\n        10,\n        1001,\n        1043\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"enabled\": false,\n      \"rect\": [\n        18,\n        10,\n        985,\n        1035\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"about:blank - Microsoft Edge\",\n      \"rect\": [\n        18,\n        "
+        },
+        {
+          "seq": 27,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 5124,
+            "name": "Barre d’adresse et de recherche",
+            "automationId": "view_1017",
+            "controlType": "Edit",
+            "action": "setvalue",
+            "value": "google.com"
+          },
+          "note": "UIA setvalue address bar",
+          "ok": true,
+          "ms": 125,
+          "text": "setvalue: Edit \"Barre d’adresse et de recherche\" #view_1017 = \"google.com\" {setvalue,expand,collapse}",
+          "did": "setvalue"
+        },
+        {
+          "seq": 28,
+          "tool": "sandbox_type",
+          "args": {
+            "keys": "{ENTER}",
+            "mode": "keys",
+            "pid": 5124
+          },
+          "note": "Enter via keys mode",
+          "ok": true,
+          "ms": 325,
+          "text": "{\n  \"sent\": 7\n}"
+        },
+        {
+          "seq": 29,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 5124,
+            "name": "edge-google-loaded"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 569,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\005-edge-google-loaded.png; source bounds (17,10) 987x1036; preview 987x1036, scale 1; captureId 4ee7132ea3db4adfb187acea6fbfc5c7."
+        },
+        {
+          "seq": 30,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 5124,
+            "name": "Barre d’adresse et de recherche",
+            "automationId": "view_1017",
+            "controlType": "Edit",
+            "action": "read"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 109,
+          "text": "read: Edit \"Barre d’adresse et de recherche\" #view_1017 = \"https://www.google.com\" {setvalue,expand,collapse}",
+          "did": "read"
+        },
+        {
+          "seq": 31,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 5124,
+            "json": true,
+            "depth": 16,
+            "maxNodes": 1200
+          },
+          "note": "",
+          "ok": true,
+          "ms": 211,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"rect\": [\n        763,\n        86,\n        153,\n        25\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"enabled\": false,\n      \"rect\": [\n        763,\n        86,\n        153,\n        25\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"rect\": [\n        763,\n        86,\n        153,\n        25\n      ]\n    },\n    {\n      \"depth\": 2,\n     "
+        },
+        {
+          "seq": 32,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 5124,
+            "name": "Tout refuser",
+            "controlType": "Button"
+          },
+          "note": "UIA click Reject-all",
+          "ok": true,
+          "ms": 111,
+          "text": "invoke: Button \"Tout refuser\" #W0wltc {invoke}",
+          "did": "invoke"
+        },
+        {
+          "seq": 33,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 5124,
+            "json": true,
+            "depth": 16,
+            "maxNodes": 1200
+          },
+          "note": "",
+          "ok": true,
+          "ms": 191,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"Google - Profil 1 – Microsoft​ Edge\",\n      \"rect\": [\n        10,\n        10,\n        1001,\n        1043\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"enabled\": false,\n      \"rect\": [\n        18,\n        10,\n        985,\n        1035\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"Google - Microsoft Edge\",\n      \"rect\": [\n        18,\n        10,\n      "
+        },
+        {
+          "seq": 34,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 5124,
+            "name": "edge-after-B1-uia"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 554,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\006-edge-after-B1-uia.png; source bounds (17,10) 987x1036; preview 987x1036, scale 1; captureId f6e839cd7d374455a38f92b8676415e8."
+        },
+        {
+          "seq": 35,
+          "tool": "sandbox_exec",
+          "args": {
+            "command": "Stop-Process -Name msedge -Force -ErrorAction SilentlyContinue"
+          },
+          "note": "edge cleanup",
+          "ok": true,
+          "ms": 1266,
+          "text": "exitCode: 0  (1260ms)",
+          "did": "exitCode"
+        }
+      ],
+      "verdicts": [
+        {
+          "what": "msedge path",
+          "result": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+        },
+        {
+          "what": "edge UI tree size",
+          "result": "50 nodes",
+          "truncated": false
+        },
+        {
+          "what": "UIA setvalue on Edge address bar",
+          "result": "ok",
+          "detail": "setvalue: Edit \"Barre d’adresse et de recherche\" #view_1017 = \"google.com\" {setvalue,expand,collapse}"
+        },
+        {
+          "what": "keys-mode Enter to focused Edge window",
+          "result": "ok"
+        },
+        {
+          "what": "current URL via address-bar readback",
+          "result": "read: Edit \"Barre d’adresse et de recherche\" #view_1017 = \"https://www.google.com\" {setvalue,expand,collapse}"
+        },
+        {
+          "what": "consent wall nodes matching reject-terms (ALL types)",
+          "result": "2 node(s)",
+          "nodes": [
+            {
+              "type": "Text",
+              "name": "Si vous sélectionnez \"Tout refuser\", nous n'utiliserons pas de cookies",
+              "rect": [
+                142,
+                613,
+                729,
+                17
+              ]
+            },
+            {
+              "type": "Button",
+              "name": "Tout refuser",
+              "rect": [
+                278,
+                849,
+                227,
+                49
+              ],
+              "actions": [
+                "invoke"
+              ],
+              "automationId": "W0wltc"
+            }
+          ]
+        },
+        {
+          "what": "consent wall actionable button",
+          "result": "selected Button: \"Tout refuser\" rect=[278,849,227,49] actions=[\"invoke\"]"
+        },
+        {
+          "what": "B1 UIA pattern click on consent button",
+          "result": "WORKED (dialog gone)",
+          "detail": "invoke: Button \"Tout refuser\" #W0wltc {invoke}"
+        }
+      ]
+    },
+    {
+      "name": "acid",
+      "steps": [
+        {
+          "seq": 36,
+          "tool": "sandbox_exec",
+          "args": {
+            "command": "@(\"${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe\", \"$env:ProgramFiles\\Microsoft\\Edge\\Application\\msedge.exe\") | Where-Object { Test-Path $_ } | Select-Object -First 1"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 1405,
+          "text": "exitCode: 0  (1398ms)\n--- stdout ---\nC:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\r\n",
+          "did": "exitCode"
+        },
+        {
+          "seq": 37,
+          "tool": "sandbox_launch",
+          "args": {
+            "path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+            "args": "--no-first-run --no-default-browser-check about:blank",
+            "waitForWindowSec": 30
+          },
+          "note": "",
+          "ok": true,
+          "ms": 1705,
+          "text": "{\n  \"hasExited\": false,\n  \"pid\": 5556,\n  \"windowTitle\": \"Sans titre - Profil 1 – Microsoft​ Edge\",\n  \"launchedAt\": \"2026-11-08T01:54:19.9612281+01:00\"\n}"
+        },
+        {
+          "seq": 38,
+          "tool": "sandbox_exec",
+          "args": {
+            "command": "(Get-Process msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1).Id"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 1277,
+          "text": "exitCode: 0  (1270ms)\n--- stdout ---\n5556\r\n",
+          "did": "exitCode"
+        },
+        {
+          "seq": 39,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 5556,
+            "json": true,
+            "depth": 10
+          },
+          "note": "",
+          "ok": true,
+          "ms": 134,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"about:blank et 1 page supplémentaire - Profil 1 – Microsoft​ Edge\",\n      \"rect\": [\n        10,\n        10,\n        1001,\n        1043\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"enabled\": false,\n      \"rect\": [\n        18,\n        10,\n        985,\n        1035\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"about:blank - Microsoft Edge\",\n      \"rect"
+        },
+        {
+          "seq": 40,
+          "tool": "sandbox_ui_action",
+          "args": {
+            "pid": 5556,
+            "name": "Barre d’adresse et de recherche",
+            "automationId": "view_1017",
+            "controlType": "Edit",
+            "action": "setvalue",
+            "value": "google.com"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 104,
+          "text": "setvalue: Edit \"Barre d’adresse et de recherche\" #view_1017 = \"google.com\" {setvalue,expand,collapse}",
+          "did": "setvalue"
+        },
+        {
+          "seq": 41,
+          "tool": "sandbox_type",
+          "args": {
+            "keys": "{ENTER}",
+            "mode": "keys",
+            "pid": 5556
+          },
+          "note": "",
+          "ok": true,
+          "ms": 215,
+          "text": "{\n  \"sent\": 7\n}"
+        },
+        {
+          "seq": 42,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 5556,
+            "name": "acid-wall-up"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 547,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\007-acid-wall-up.png; source bounds (17,10) 987x1036; preview 987x1036, scale 1; captureId a4b2cbfc25df4579a847cd3fc97b36d0."
+        },
+        {
+          "seq": 43,
+          "tool": "sandbox_smart_click",
+          "args": {
+            "pid": 5556,
+            "name": "Tout refuser",
+            "controlType": "Button",
+            "verify": "gone"
+          },
+          "note": "smart_click \"Tout refuser\"",
+          "ok": true,
+          "ms": 351,
+          "text": "uia-invoke (verified: element gone)\nelement: Button \"Tout refuser\" #W0wltc\nladder: uia-invoke:ok 12ms",
+          "did": "element"
+        },
+        {
+          "seq": 44,
+          "tool": "sandbox_ui_tree",
+          "args": {
+            "pid": 5556,
+            "json": true,
+            "depth": 14,
+            "maxNodes": 800
+          },
+          "note": "",
+          "ok": true,
+          "ms": 174,
+          "text": "{\n  \"nodes\": [\n    {\n      \"depth\": 0,\n      \"type\": \"Window\",\n      \"name\": \"Google et 1 page supplémentaire - Profil 1 – Microsoft​ Edge\",\n      \"rect\": [\n        10,\n        10,\n        1001,\n        1043\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"\",\n      \"enabled\": false,\n      \"rect\": [\n        18,\n        10,\n        985,\n        1035\n      ]\n    },\n    {\n      \"depth\": 1,\n      \"type\": \"Pane\",\n      \"name\": \"Google - Microsoft Edge\",\n      \"rect\": [\n     "
+        },
+        {
+          "seq": 45,
+          "tool": "sandbox_screenshot",
+          "args": {
+            "pid": 5556,
+            "name": "acid-final"
+          },
+          "note": "",
+          "ok": true,
+          "ms": 531,
+          "text": "Saved C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out\\screenshots\\008-acid-final.png; source bounds (17,10) 987x1036; preview 987x1036, scale 1; captureId 57a569e36a1f4efc8a6b92a9adf07a29."
+        },
+        {
+          "seq": 46,
+          "tool": "sandbox_stop",
+          "args": {},
+          "note": "",
+          "ok": true,
+          "ms": 4321,
+          "text": "{\n  \"stopped\": [\n    \"0e08fee8-b941-424e-86c5-670df7f98ea3\"\n  ],\n  \"runDir\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-005332\",\n  \"outDir\": \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\sandbox-win-mcp\\\\runs\\\\20261108-005332\\\\out\",\n  \"artifacts\": [\n    \"screenshots\",\n    \"screenshots\\\\001-charmap-before.png\",\n    \"screenshots\\\\002-charmap-after.png\",\n    \"screenshots\\\\003-regedit-after.png\",\n    \"screenshots\\\\004-edge-blank.png\",\n    \"screenshots\\\\005-edge-google-loaded.png\",\n "
+        }
+      ],
+      "verdicts": [
+        {
+          "what": "acid live edge pid",
+          "result": "5556"
+        },
+        {
+          "what": "smart_click candidate \"Tout refuser\"",
+          "result": "uia-invoke (verified: element gone) | element: Button \"Tout refuser\" #W0wltc | ladder: uia-invoke:ok 12ms"
+        },
+        {
+          "what": "ACID RESULT",
+          "result": "DISMISSED in 1 dismissal call(s); strategy=uia-invoke candidate=\"Tout refuser\" (WITHIN <=3 bar)"
+        },
+        {
+          "what": "post-check: reject-button still in tree",
+          "result": "false"
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "stopped": [
+      "0e08fee8-b941-424e-86c5-670df7f98ea3"
+    ],
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out",
+    "artifacts": [
+      "screenshots",
+      "screenshots\\001-charmap-before.png",
+      "screenshots\\002-charmap-after.png",
+      "screenshots\\003-regedit-after.png",
+      "screenshots\\004-edge-blank.png",
+      "screenshots\\005-edge-google-loaded.png",
+      "screenshots\\006-edge-after-B1-uia.png",
+      "screenshots\\007-acid-wall-up.png",
+      "screenshots\\008-acid-final.png"
+    ]
+  },
+  "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-005332\\out"
+}

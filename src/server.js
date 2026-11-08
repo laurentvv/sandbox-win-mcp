@@ -201,18 +201,6 @@ server.registerTool('sandbox_click', {
   },
 }, tool(async ({ coordinates = 'screenshot', ...a }) => text(await sbx.click({ ...a, coordinates }))));
 
-server.registerTool('sandbox_type', {
-  title: 'Send keys in sandbox',
-  description: 'Type text or send key chords to the focused window (or a window found by title/pid, which is focused first). ' +
-    'With literal=false, uses SendKeys syntax: {ENTER}, {TAB}, ^s (Ctrl+S), %{F4} (Alt+F4).',
-  inputSchema: {
-    keys: z.string(),
-    literal: z.boolean().optional().describe('Treat keys as plain text (default true).'),
-    windowTitle: z.string().optional(),
-    pid: z.number().int().optional(),
-  },
-}, tool(async (a) => text(await sbx.type(a))));
-
 const target = {
   pid: z.number().int().optional().describe('Process whose windows to search (from sandbox_launch).'),
   windowTitle: z.string().optional().describe('Or: a window whose title contains this text.'),
@@ -222,6 +210,43 @@ const selector = {
   automationId: z.string().optional().describe('AutomationId (control name in WinForms/WPF), exact match.'),
   controlType: z.string().optional().describe('Button, Edit, CheckBox, ComboBox, ListItem, MenuItem, TabItem, Text, ...'),
 };
+
+server.registerTool('sandbox_type', {
+  title: 'Send keys in sandbox',
+  description: 'Type text or send key chords to the focused window (or a window found by title/pid, which is focused first). ' +
+    "mode is explicit: 'text' types the string exactly as-is; 'keys' is SendKeys syntax ({ENTER}, {TAB}, ^s, %{F4}). " +
+    'Prefer semantic actions (sandbox_smart_click, sandbox_ui_action setvalue) over raw typing.',
+  inputSchema: {
+    keys: z.string(),
+    mode: z.enum(['text', 'keys']).describe("'text' = verbatim, 'keys' = SendKeys syntax like {ENTER} or ^s."),
+    literal: z.boolean().optional().describe('Deprecated: use mode instead (true = text, false = keys).'),
+    windowTitle: z.string().optional(),
+    pid: z.number().int().optional(),
+  },
+}, tool(async (a) => text(await sbx.type(a))));
+
+server.registerTool('sandbox_smart_click', {
+  title: 'Smart click (UIA-first)',
+  description: 'Click a control by selector using the UIA-first strategy ladder: Invoke/Toggle/Select/ExpandCollapse ' +
+    'pattern, then the legacy IAccessible default action, then UIA focus + Enter (activates web content that ignores ' +
+    'synthesized mouse input), then a focus-verified SendInput click at the element. Reports every attempt, the winning ' +
+    'strategy and an effect check (element gone / state changed). Prefer this over pixel sandbox_click; querying the ' +
+    'element also wakes Chromium accessibility, which makes web pages drivable.',
+  inputSchema: {
+    ...target, ...selector,
+    index: z.number().int().min(0).optional().describe('Which match to use when several match (default 0).'),
+    verify: z.enum(['auto', 'gone', 'state', 'none']).optional().describe("Effect check: auto (default) = gone or state changed; gone = element must disappear; state = state must change; none = trust the pattern."),
+    timeoutSec: z.number().min(1).max(120).optional().describe('Default 15.'),
+  },
+}, tool(async (a) => {
+  const r = await sbx.smartClick(a);
+  const el = r.element ?? {};
+  const elLine = [el.type, el.name && JSON.stringify(el.name), el.automationId && `#${el.automationId}`].filter(Boolean).join(' ');
+  const ladder = (r.attempts ?? []).map((x) => `${x.strategy}:${x.ok ? 'ok' : `fail (${x.error ?? '?'})`}${x.ms != null ? ` ${x.ms}ms` : ''}`).join(' -> ');
+  return text(`${r.strategy ?? 'none'} (${r.verified ? 'verified' : 'UNVERIFIED'}: ${r.verifyNote})\n` +
+    `element: ${elLine}${r.matches > 1 ? ` (1 of ${r.matches} matches)` : ''}\n` +
+    `ladder: ${ladder}${r.focusVerified !== undefined ? `\nfocusVerified: ${r.focusVerified}` : ''}`);
+}));
 
 server.registerTool('sandbox_ui_tree', {
   title: 'UI Automation tree',

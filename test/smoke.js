@@ -37,7 +37,7 @@ try {
   // Click into the text box (top of the client area), type, then click the big Greet button.
   const win = JSON.parse((await call('sandbox_windows')).txt).find((w) => w.title === 'Hello Sandbox');
   await call('sandbox_click', { x: win.left + win.width / 2, y: win.top + win.height * 0.16, coordinates: 'screen' });
-  await call('sandbox_type', { keys: 'Scott (from an MCP server)' });
+  await call('sandbox_type', { keys: 'Scott (from an MCP server)', mode: 'text' });
   await call('sandbox_click', { x: win.left + win.width / 2, y: win.top + win.height * 0.8, coordinates: 'screen' });
   await call('sandbox_screenshot', { windowTitle: 'Hello Sandbox', name: 'after-greet' });
   await call('sandbox_screenshot', { name: 'desktop' });

@@ -260,6 +260,12 @@ function Op-UiAction($req) {
         -ControlType ([string]$req.controlType) -Index ([int]$req.index) -Action (Get-Opt $req.action 'click') -Value ([string]$req.value)
 }
 
+function Op-SmartClick($req) {
+    Import-SbxUi
+    Invoke-SbxSmartClick -ProcessId ([int]$req.pid) -WindowTitle ([string]$req.windowTitle) -Name ([string]$req.name) -AutomationId ([string]$req.automationId) `
+        -ControlType ([string]$req.controlType) -Index (Get-Opt $req.index 0) -Verify (Get-Opt $req.verify 'auto') -TimeoutSec (Get-Opt $req.timeoutSec 15)
+}
+
 function Op-UiWait($req) {
     Import-SbxUi
     Wait-SbxUi -ProcessId ([int]$req.pid) -WindowTitle ([string]$req.windowTitle) -Name ([string]$req.name) -AutomationId ([string]$req.automationId) `
@@ -292,7 +298,7 @@ function Invoke-Request([string]$line) {
         $envelope = $line | ConvertFrom-Json
         if ($envelope.counter -gt 0 -and $envelope.counter -le 9007199254740991) { $counter = [long]$envelope.counter }
         $req = $protocol.Open($line, 'request', 0) | ConvertFrom-Json
-        if ($req.op -in @('screenshot', 'click', 'keys', 'uiaction')) { Assert-InteractiveDesktop }
+        if ($req.op -in @('screenshot', 'click', 'keys', 'uiaction', 'smartclick')) { Assert-InteractiveDesktop }
         $result = switch ($req.op) {
             'ping'       { @{ user = "$env:USERDOMAIN\$env:USERNAME"; computer = $env:COMPUTERNAME; pid = $PID
                              epoch = $identity.epoch; protocolVersion = 2; agentVersion = $identity.agentVersion; agentSha256 = $agentHash } }
@@ -311,6 +317,7 @@ function Invoke-Request([string]$line) {
             'keys'       { Op-Keys $req }
             'uitree'     { Op-UiTree $req }
             'uiaction'   { Op-UiAction $req }
+            'smartclick' { Op-SmartClick $req }
             'uiwait'     { Op-UiWait $req }
             'snapshot'   { Op-Snapshot $req }
             'diff'       { Op-Diff $req }

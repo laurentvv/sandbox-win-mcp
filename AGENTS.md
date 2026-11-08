@@ -128,7 +128,15 @@ npm run e2e                # LIVE: smoke + offline mailbox path
 - **[2026-11-08] SendInput ignored on web content (Edge consent iframe 4/4)** — input layer must
   be UIA-first with per-action strategy reporting; `sandbox_type`'s `literal=true` default silently
   types "{ENTER}" as text — explicit key/text modes (M2).
-- Full detail: [docs/upstream-audit.md](docs/upstream-audit.md) (ten live lessons → code map).
+- **[2026-11-08] Chromium activates web accessibility lazily** (lab exp1b/c) — resolve/query the
+  element before acting or patterns are unreliable; and loose name selectors match explanatory
+  Text paragraphs before the real Button (`did=mouse click` is the tell) — always pass
+  `controlType` and prefer actionable nodes. See docs/lab-input-findings.md.
+- **[2026-11-08] A second msedge launch delegates to the existing instance and its pid exits** —
+  resolve the live windowed pid (`Get-Process msedge | ? MainWindowHandle -ne 0`) instead of
+  trusting sandbox_launch's pid for later calls.
+- Full detail: [docs/upstream-audit.md](docs/upstream-audit.md) (ten live lessons → code map);
+  input experiments: [docs/lab-input-findings.md](docs/lab-input-findings.md).
 
 ### References
 - Long context: `docs/upstream-audit.md` (import audit + roadmap mapping); upstream docs kept
