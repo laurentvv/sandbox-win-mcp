@@ -1,6 +1,6 @@
 // Core Windows Sandbox driver shared by the MCP server (server.js) and the sbx CLI (cli.js).
 // Host side drives the wsb CLI; a small guest agent (agent/agent.ps1) runs in the sandbox's interactive session.
-// State for the one running sandbox lives in %LOCALAPPDATA%\sandbox-mcp\current.json so the CLI and MCP share it.
+// State for the one running sandbox lives in %LOCALAPPDATA%\sandbox-win-mcp\current.json so the CLI and MCP share it.
 import { execFile, spawn } from 'node:child_process';
 import { randomBytes, randomUUID } from 'node:crypto';
 import net from 'node:net';
@@ -15,7 +15,8 @@ import { recordingOptions, publishRecording, reserveRecording, clearRecording, r
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const VERSION = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
-export const HOME = process.env.SANDBOX_MCP_HOME || path.join(process.env.LOCALAPPDATA || process.cwd(), 'sandbox-mcp');
+// Distinct home from upstream sandbox-mcp so the two tools never share current.json/runs.
+export const HOME = process.env.SANDBOX_MCP_HOME || path.join(process.env.LOCALAPPDATA || process.cwd(), 'sandbox-win-mcp');
 export const GUEST = { agent: 'C:\\sbx\\agent', in: 'C:\\sbx\\in', out: 'C:\\sbx\\out' };
 const STATE_FILE = path.join(HOME, 'current.json');
 const RECORDING_FILE = path.join(HOME, 'recording.json');

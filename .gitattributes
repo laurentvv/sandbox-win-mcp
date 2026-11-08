@@ -1,0 +1,19 @@
+# Normalize text files to LF in the repository; checkouts follow core.autocrlf.
+* text=auto
+
+# Windows scripts that tools may execute verbatim: stable CRLF
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+
+# Binaries
+*.png binary
+*.gif binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.exe binary
+*.dll binary
+*.cer binary
+*.msi binary
+*.msix binary
+*.appx binary

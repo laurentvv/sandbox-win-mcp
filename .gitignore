@@ -1,0 +1,14 @@
+# Agent local state (ledger, installed skills) - kept on disk, never committed
+.agent/
+.agents/
+
+# Node
+node_modules/
+
+# Build/output
+work/
+dist/
+
+# Sample build output
+samples/*/bin/
+samples/*/obj/

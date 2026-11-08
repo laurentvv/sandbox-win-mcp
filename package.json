@@ -1,16 +1,17 @@
 {
-  "name": "sandbox-mcp",
-  "version": "1.2.0",
-  "description": "Fresh, throwaway Windows machines for testing your apps: an MCP server and CLI that automate Windows Sandbox",
+  "name": "sandbox-win-mcp",
+  "version": "2.0.0-alpha.1",
+  "description": "Hardened Windows Sandbox automation: MCP server + sbx CLI. Fork of shanselman/sandbox-mcp v1.2.0 (MIT) with reliability, UIA-first input and security hardening.",
   "main": "src/core.js",
   "type": "module",
   "bin": {
     "sbx": "src/cli.js",
-    "sandbox-mcp": "src/server.js"
+    "sandbox-win-mcp": "src/server.js"
   },
   "scripts": {
     "start": "node src/server.js",
     "test": "node --test \"test/unit/*.test.js\"",
+    "test:handshake": "node test/mcp-handshake.js",
     "smoke": "node test/smoke.js",
     "e2e": "node test/smoke.js && node test/offline.js",
     "package:win": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/package.ps1",
@@ -38,14 +39,15 @@
     "testing",
     "automation",
     "ai-agent",
-    "wsb"
+    "wsb",
+    "security",
+    "hardened"
   ],
-  "author": "Scott Hanselman",
+  "author": "sandbox-win-mcp contributors",
+  "contributors": [
+    "Upstream: shanselman (sandbox-mcp) <https://github.com/shanselman/sandbox-mcp>"
+  ],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shanselman/sandbox-mcp.git"
-  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
     "zod": "^4.6.7"

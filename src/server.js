@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// sandbox-mcp: MCP server that drives Windows Sandbox (one fresh, ephemeral sandbox at a time).
+// sandbox-win-mcp: MCP server that drives Windows Sandbox (one fresh, ephemeral sandbox at a time).
 // All the real work lives in core.js (shared with the `sbx` CLI); this file only maps it to MCP tools.
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -24,7 +24,7 @@ const network = z.enum(['on', 'firewall', 'off']).optional().describe(
 // The sandbox this server process started, stopped automatically when the MCP client goes away.
 let startedTarget = null;
 sbx.setDesktopOwner(process.env.SANDBOX_MCP_WORKFLOW || `mcp:${process.pid}`);
-const server = new McpServer({ name: 'sandbox-mcp', version: sbx.VERSION });
+const server = new McpServer({ name: 'sandbox-win-mcp', version: sbx.VERSION });
 
 server.registerTool('sandbox_deps', {
   title: 'Diagnose application dependencies',
@@ -414,4 +414,4 @@ process.stdin.on('close', () => shutdown('client disconnected'));
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP', 'SIGBREAK']) process.on(sig, () => shutdown(sig));
 
 await server.connect(new StdioServerTransport());
-sbx.log(`sandbox-mcp ${sbx.VERSION} ready; home=${sbx.HOME}`);
+sbx.log(`sandbox-win-mcp ${sbx.VERSION} ready; home=${sbx.HOME}`);
