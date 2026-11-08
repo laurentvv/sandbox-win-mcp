@@ -1,0 +1,87 @@
+[
+  {
+    "sample": "winui",
+    "app": "HelloWinUI.exe",
+    "startedAt": "2026-11-07T01:25:32.446Z",
+    "sandboxId": "a2621377-6021-4064-b226-403d2511a83c",
+    "network": "off",
+    "bootSeconds": 16.073,
+    "seconds": 79.722,
+    "pass": false,
+    "process": {
+      "hasExited": true,
+      "exitCode": -1073741189,
+      "pid": 8844,
+      "windowTitle": {},
+      "hasWindow": false
+    },
+    "package": null,
+    "test": {
+      "stdout": "",
+      "stderr": "Nothing matched automationId 'NameBox' within 30000ms.\r\nAt C:\\sbx\\agent\\SbxUi.psm1:42 char:103\r\n+ ... xception] -and $e.InnerException) { throw $e.InnerException.Message }\r\n+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Nothing matched...within 30000ms.:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Nothing matched automationId 'NameBox' within 30000ms.\r\n \r\n\r\n",
+      "exitCode": 1
+    },
+    "failures": [
+      "exited with code -1073741189",
+      "test script exited with code 1",
+      "1 crash/error event(s) for HelloWinUI.exe"
+    ],
+    "crashes": [
+      {
+        "time": "2026-11-06T17:25:54.1502424-08:00",
+        "source": "Application Error",
+        "id": 1000,
+        "message": "Faulting application name: HelloWinUI.exe, version: 1.0.0.0, time stamp: 0x6ada0000\r\nFaulting module name: Microsoft.UI.Xaml.dll, version: 3.3.0.0, time stamp: 0x870df769\r\nException code: 0xc000027b\r\nFault offset: 0x00000000003d1699\r\nFaulting process id: 0x228C\r\nFaulting application start time: 0x1DD6E56EE583488\r\nFaulting application path: C:\\apps\\HelloWinUI\\HelloWinUI.exe\r\nFaulting module path: C:\\apps\\HelloWinUI\\Microsoft.UI.Xaml.dll\r\nReport Id: 2ba839a7-2983-4d4b-ad79-9ed246a4220e\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+      }
+    ],
+    "crashEvents": 1,
+    "screenshots": 1,
+    "screenshot": "winui-initial-failure.png",
+    "report": "runs\\20261107-012533\\out\\report.json"
+  },
+  {
+    "sample": "winui-msix",
+    "app": "HelloWinUI.msix",
+    "startedAt": "2026-11-07T01:27:18.241Z",
+    "sandboxId": "b8904f13-b346-4b41-8acb-ae9f135f8464",
+    "network": "off",
+    "bootSeconds": 14.066,
+    "seconds": 80.537,
+    "pass": false,
+    "process": {
+      "hasExited": true,
+      "exitCode": -1073741189,
+      "pid": 7036,
+      "windowTitle": {},
+      "hasWindow": false
+    },
+    "package": {
+      "installLocation": "C:\\Program Files\\WindowsApps\\SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm",
+      "packageFullName": "SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm",
+      "aumid": "SandboxShowcase.WinUI_nf4dxqg4mb6dm!App",
+      "executable": "HelloWinUI.exe"
+    },
+    "test": {
+      "stdout": "",
+      "stderr": "Nothing matched automationId 'NameBox' within 30000ms.\r\nAt C:\\sbx\\agent\\SbxUi.psm1:42 char:103\r\n+ ... xception] -and $e.InnerException) { throw $e.InnerException.Message }\r\n+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Nothing matched...within 30000ms.:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Nothing matched automationId 'NameBox' within 30000ms.\r\n \r\n\r\n",
+      "exitCode": 1
+    },
+    "failures": [
+      "exited with code -1073741189",
+      "test script exited with code 1",
+      "1 crash/error event(s) for HelloWinUI.msix"
+    ],
+    "crashes": [
+      {
+        "time": "2026-11-06T17:27:43.7038331-08:00",
+        "source": "Application Error",
+        "id": 1000,
+        "message": "Faulting application name: HelloWinUI.exe, version: 1.0.0.0, time stamp: 0x6ada0000\r\nFaulting module name: Microsoft.UI.Xaml.dll, version: 3.3.0.0, time stamp: 0x870df769\r\nException code: 0xc000027b\r\nFault offset: 0x00000000003d1699\r\nFaulting process id: 0x1B7C\r\nFaulting application start time: 0x1DD6E572FAE6E5C\r\nFaulting application path: C:\\Program Files\\WindowsApps\\SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm\\HelloWinUI.exe\r\nFaulting module path: C:\\Program Files\\WindowsApps\\SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm\\Microsoft.UI.Xaml.dll\r\nReport Id: d954a11d-34b4-4dad-afee-6e71594c28dd\r\nFaulting package full name: SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm\r\nFaulting package-relative application ID: App"
+      }
+    ],
+    "crashEvents": 1,
+    "screenshots": 1,
+    "screenshot": "winui-msix-initial-failure.png",
+    "report": "runs\\20261107-012719\\out\\report.json"
+  }
+]

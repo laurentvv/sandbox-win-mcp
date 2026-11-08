@@ -1,0 +1,222 @@
+[
+  {
+    "sample": "hello",
+    "entryPoint": "sbx run (CLI)",
+    "app": "HelloSandbox.exe",
+    "startedAt": "2026-11-07T01:20:31.005Z",
+    "sandboxId": "ac0f8529-17f4-4b97-8e21-ecd35345a166",
+    "network": "off",
+    "bootSeconds": 15.56,
+    "seconds": 41.921,
+    "pass": true,
+    "process": {
+      "pid": 9188,
+      "exitCode": null,
+      "windowTitle": "Hello Sandbox",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": null,
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "label: Hello, Sandbox Tester!\r\nfile:  Hello, Sandbox Tester!\r\nPASS\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "hello.png",
+    "report": "runs\\20261107-012031\\out\\report.json"
+  },
+  {
+    "sample": "wpf",
+    "entryPoint": "sbx run (CLI)",
+    "app": "Wpf.exe",
+    "startedAt": "2026-11-07T01:23:17.301Z",
+    "sandboxId": "b39de2d3-87c4-400c-bc6d-293722e86dbe",
+    "network": "off",
+    "bootSeconds": 16.68,
+    "seconds": 45.561,
+    "pass": true,
+    "process": {
+      "pid": 4516,
+      "exitCode": null,
+      "windowTitle": "Sandbox WPF",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": null,
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "PASS: WPF button and output\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "wpf.png",
+    "report": "runs\\20261107-012317\\out\\report.json"
+  },
+  {
+    "sample": "winforms",
+    "entryPoint": "sbx run (CLI)",
+    "app": "WinForms.exe",
+    "startedAt": "2026-11-07T01:24:03.759Z",
+    "sandboxId": "29d715fb-e736-4077-ae8d-a70451b596e3",
+    "network": "off",
+    "bootSeconds": 16.575,
+    "seconds": 44.967,
+    "pass": true,
+    "process": {
+      "pid": 9048,
+      "exitCode": null,
+      "windowTitle": "Sandbox WinForms",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": null,
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "PASS: WinForms button and output\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "winforms.png",
+    "report": "runs\\20261107-012404\\out\\report.json"
+  },
+  {
+    "sample": "native",
+    "entryPoint": "sbx run (CLI)",
+    "app": "NativeWin32.exe",
+    "startedAt": "2026-11-07T01:24:49.826Z",
+    "sandboxId": "65075e2d-ece0-4390-b12a-06b206d6855d",
+    "network": "off",
+    "bootSeconds": 16.133,
+    "seconds": 41.558,
+    "pass": true,
+    "process": {
+      "pid": 8780,
+      "exitCode": null,
+      "windowTitle": "Sandbox Native Win32",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": null,
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "PASS: native Win32 button and output\r\nGuest Windows: 10.0.26100.0\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "native.png",
+    "report": "runs\\20261107-012450\\out\\report.json"
+  },
+  {
+    "sample": "native-msix",
+    "entryPoint": "sbx run (CLI)",
+    "app": "NativeWin32.msix",
+    "startedAt": "2026-11-07T01:19:42.075Z",
+    "sandboxId": "09e9717d-acd7-40e1-95df-22751b026321",
+    "network": "off",
+    "bootSeconds": 17.974,
+    "seconds": 48.249,
+    "pass": true,
+    "process": {
+      "pid": 8336,
+      "exitCode": null,
+      "windowTitle": "Sandbox Native Win32",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": {
+      "installLocation": "C:\\Program Files\\WindowsApps\\Sandbox.NativeWin32_1.0.0.0_x64__kkrrj4taesrsw",
+      "packageFullName": "Sandbox.NativeWin32_1.0.0.0_x64__kkrrj4taesrsw",
+      "aumid": "Sandbox.NativeWin32_kkrrj4taesrsw!App",
+      "executable": "NativeWin32.exe"
+    },
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "PASS: native Win32 button and output\r\nGuest Windows: 10.0.26100.0\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "native-msix.png",
+    "report": "runs\\20261107-011942\\out\\report.json"
+  },
+  {
+    "sample": "winui",
+    "entryPoint": "sbx run (CLI)",
+    "app": "HelloWinUI.exe",
+    "startedAt": "2026-11-07T01:47:22.947Z",
+    "sandboxId": "4096fb7d-9cf3-44e4-a081-3d498e7bb48b",
+    "network": "off",
+    "bootSeconds": 14.368,
+    "seconds": 42.662,
+    "pass": true,
+    "process": {
+      "pid": 8236,
+      "exitCode": null,
+      "windowTitle": "Hello WinUI",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": null,
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "PASS: WinUI greeting, counter, and blank-name fallback\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "winui.png",
+    "report": "runs\\20261107-014723\\out\\report.json"
+  },
+  {
+    "sample": "winui-msix",
+    "entryPoint": "sandbox_run (MCP)",
+    "app": "HelloWinUI.msix",
+    "startedAt": "2026-11-07T01:48:06.995Z",
+    "sandboxId": "3a808f99-edf4-4b9a-98a6-5f6b19d6b2bf",
+    "network": "off",
+    "bootSeconds": 12.667,
+    "seconds": 45.395,
+    "pass": true,
+    "process": {
+      "pid": 7032,
+      "exitCode": null,
+      "windowTitle": "Hello WinUI",
+      "hasWindow": true,
+      "hasExited": false
+    },
+    "package": {
+      "installLocation": "C:\\Program Files\\WindowsApps\\SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm",
+      "packageFullName": "SandboxShowcase.WinUI_1.0.0.0_x64__nf4dxqg4mb6dm",
+      "aumid": "SandboxShowcase.WinUI_nf4dxqg4mb6dm!App",
+      "executable": "HelloWinUI.exe"
+    },
+    "test": {
+      "stderr": "",
+      "exitCode": 0,
+      "stdout": "PASS: WinUI greeting, counter, and blank-name fallback\r\n"
+    },
+    "failures": [],
+    "crashes": [],
+    "crashEvents": 0,
+    "screenshots": 3,
+    "screenshot": "winui-msix.png",
+    "report": "runs\\20261107-014807\\out\\report.json"
+  }
+]

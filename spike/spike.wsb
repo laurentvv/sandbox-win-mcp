@@ -1,0 +1,7 @@
+<Configuration>
+  <MappedFolders>
+    <MappedFolder><HostFolder>D:\github\sandbox-mcp\work</HostFolder><SandboxFolder>C:\work</SandboxFolder><ReadOnly>false</ReadOnly></MappedFolder>
+    <MappedFolder><HostFolder>D:\github\sandbox-mcp\spike</HostFolder><SandboxFolder>C:\spike</SandboxFolder><ReadOnly>true</ReadOnly></MappedFolder>
+  </MappedFolders>
+  <LogonCommand><Command>powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\spike\agent.ps1</Command></LogonCommand>
+</Configuration>

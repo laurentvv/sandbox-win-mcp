@@ -1,0 +1,6 @@
+2026-11-07T01:36:00.7037970+00:00 App constructor: loading App.xaml
+2026-11-07T01:36:00.7124307+00:00 App.xaml loaded
+2026-11-07T01:36:00.7683992+00:00 UnhandledException: Cannot locate resource from 'ms-appx:///Microsoft.UI.Xaml/Themes/themeresources.xaml'. [Line: 0 Position: 0]
+Microsoft.UI.Xaml.Markup.XamlParseException: The text associated with this error code could not be found.
+
+Cannot locate resource from 'ms-appx:///Microsoft.UI.Xaml/Themes/themeresources.xaml'. [Line: 0 Position: 0]

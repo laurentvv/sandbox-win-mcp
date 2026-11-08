@@ -1,0 +1,12 @@
+{
+  "description": "Observed fresh Windows Sandbox before provisioning, network off. Optional inbox CBS runtime packages are not assumed to satisfy application framework dependencies.",
+  "observedAt": "2026-11-07T01:08:20Z",
+  "build": "26100.9882",
+  "dotnetFrameworkRelease": 533320,
+  "dotnetRuntimes": [],
+  "webview2": [],
+  "windowsAppRuntime": [
+    { "Name": "Microsoft.WindowsAppRuntime.CBS.1.6", "Version": "6000.900.156.100", "Architecture": 9 },
+    { "Name": "Microsoft.WindowsAppRuntime.CBS.2", "Version": "2.5.1.100", "Architecture": 9 }
+  ]
+}
