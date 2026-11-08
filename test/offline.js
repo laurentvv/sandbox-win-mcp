@@ -44,7 +44,7 @@ for (const network of ['firewall', 'off']) {
     }
     check(!(await call('sandbox_screenshot', { maxWidth: 400 })).r.isError, `${network}: screenshot works`);
     check(!(await call('sandbox_copy_in', { hostPath: path.join(root, 'package.json'), sandboxPath: 'C:\\t\\package.json' })).r.isError, `${network}: copy in`);
-    check((await call('sandbox_exec', { command: "(Get-Content C:\\t\\package.json -Raw | ConvertFrom-Json).name" })).txt.includes('sandbox-mcp'), `${network}: copied file readable`);
+    check((await call('sandbox_exec', { command: "(Get-Content C:\\t\\package.json -Raw | ConvertFrom-Json).name" })).txt.includes('sandbox-win-mcp'), `${network}: copied file readable`);
   } finally {
     if (network === 'firewall') {
       try { await call('sandbox_stop'); } finally { await client.close(); }
