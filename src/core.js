@@ -509,6 +509,66 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
   }
 }
 
+/**
+ * Reboot the GUEST in place: same sandbox id, same run folder and artifacts, same agent identity
+ * (Windows has kept in-guest state across internal restarts since 22H2). The guest usually gets
+ * a new IP - learned into the state - and the agent is re-injected into the fresh interactive
+ * session, verified against the SAME epoch. This is how installers that demand a reboot become
+ * testable in one run.
+ */
+export async function guestReboot({ timeoutSec = 300, idleMinutes } = {}) {
+  const s = await requireSandbox();
+  if (s.network === 'off') throw new Error('guest_reboot is not supported with network off (the mailbox transport needs the boot-time shares re-established; stop and start a new sandbox instead).');
+  const t0 = Date.now();
+  const stages = [];
+  await wsb(['exec', '--id', s.id, '-r', 'System', '-c', 'shutdown /r /t 3']);
+  stages.push({ name: 'reboot-command', atMs: Date.now() - t0 });
+  log('guest rebooting in place');
+
+  // Phase 1 - the session MUST go down first (shutdown /t 3 means it answers for a few more
+  // seconds; treating that as "back" races the actual reboot and kills the agent mid-flight).
+  await waitFor(async () => {
+    const r = await wsb(['exec', '--id', s.id, '-r', 'ExistingLogin', '-c', 'cmd /c exit 0'], 30_000).catch(() => null);
+    return r === null || r?.ExitCode !== 0;
+  }, 90_000, 'the guest session to go down');
+  stages.push({ name: 'guest-down', atMs: Date.now() - t0 });
+
+  // Phase 2 - ... and then come back.
+  await waitFor(async () => {
+    // core's wsb() resolves the parsed --raw JSON itself ({ExitCode: 0}); while the guest is
+    // down it rejects ("resource not in the correct state"), which waitFor retries.
+    const r = await wsb(['exec', '--id', s.id, '-r', 'ExistingLogin', '-c', 'cmd /c exit 0'], 30_000).catch(() => null);
+    return r?.ExitCode === 0;
+  }, (timeoutSec) * 1000, 'the guest to come back from its reboot');
+  stages.push({ name: 'guest-back', atMs: Date.now() - t0 });
+
+  const ip = await getIp(s.id);
+  const target = { ...s, ...(ip && ip !== s.ip ? { ip } : {}) };
+  if (ip && ip !== s.ip) updateState(s, (st) => { st.ip = ip; });
+  stages.push({ name: 'ip-' + (ip === s.ip ? 'unchanged' : 'changed'), atMs: Date.now() - t0 });
+
+  await wsb(['exec', '--id', s.id, '-r', 'ExistingLogin', '-c',
+    `cmd /c start /min powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File ${GUEST.agent}\\agent.ps1 -Port ${AGENT_PORT} -IdleMinutes ${validateIdleMinutes(idleMinutes)}`], 30_000);
+  stages.push({ name: 'agent-relaunched', atMs: Date.now() - t0 });
+
+  const hello = await waitFor(() => agentCall(target, 'ping', {}, 3000).catch(() => null), 60_000, 'the re-injected agent');
+  if (hello.epoch !== s.epoch) throw new Error(STALE_BOOT);
+  if (hello.protocolVersion !== s.identity.protocolVersion || hello.agentSha256 !== s.identity.agentSha256) {
+    throw new Error('Re-injected agent identity mismatch: staged agent files do not match the running guest.');
+  }
+  stages.push({ name: 'agent-verified', atMs: Date.now() - t0 });
+  await waitFor(async () => {
+    const facts = await agentCall(target, 'desktop', {}, 5000).catch(() => null);
+    return facts?.ready && facts;
+  }, 60_000, 'the interactive desktop after reboot');
+  stages.push({ name: 'desktop-ready', atMs: Date.now() - t0 });
+
+  const seconds = (Date.now() - t0) / 1000;
+  audit(s, { op: 'guest-reboot', seconds, ip: target.ip, stages, ok: true });
+  log(`guest back in ${seconds.toFixed(1)}s (ip ${target.ip})`);
+  return { rebooted: true, seconds, ip: target.ip, user: hello.user, stages };
+}
+
 export async function stopSandbox({ force = false, target } = {}) {
   const mine = await current();
   if (target && (!mine || mine.id !== target.id || mine.epoch !== target.epoch)) throw new Error(STALE_BOOT);

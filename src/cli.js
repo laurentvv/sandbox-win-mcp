@@ -79,6 +79,7 @@ Step by step
   scroll <x> <y> [notches] [--horizontal]
                                      Mouse wheel at a point; positive = up (default 3 notches)
   kill <name> | --pid <n>            Terminate guest processes
+  reboot [--timeout <sec>]           Reboot the guest IN PLACE (state persists; agent re-injected)
   type <text> [--keys] [--window <title>] [--pid <pid>]
                                      Type text (--keys: SendKeys syntax like {ENTER} or ^s)
   ui [tree] [--pid <pid>|--window <title>] [--depth <n>] [--max <n>]
@@ -307,6 +308,12 @@ async function main(argv) {
       const pid = num(opt.pid, '--pid');
       if (!pid && !pos[0]) throw new Error('usage: sbx kill <name> | --pid <n>');
       out(opt, await sbx.processKill({ pid, name: pid ? undefined : pos[0] }));
+      return 0;
+    }
+
+    case 'reboot': {
+      out(opt, await sbx.guestReboot({ timeoutSec: num(opt.timeout, '--timeout'), idleMinutes: num(opt['idle-minutes'], '--idle-minutes') }),
+        (r) => `Guest back in ${r.seconds.toFixed(1)}s (ip ${r.ip}); stages: ${r.stages.map((x) => x.name).join(' -> ')}`);
       return 0;
     }
 

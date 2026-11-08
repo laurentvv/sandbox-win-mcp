@@ -1,0 +1,174 @@
+{
+  "startedAt": "2026-11-08T02:25:13.910Z",
+  "timeline": [
+    {
+      "t": 1794104724050,
+      "phase": "boot",
+      "fact": "id=1d4b1c22 ip=172.23.246.202 9.9s"
+    },
+    {
+      "t": 1794104727054,
+      "phase": "marker",
+      "fact": "written: \"before-reboot\""
+    },
+    {
+      "t": 1794104727300,
+      "phase": "reboot-cmd",
+      "fact": "wsb exec shutdown: ok=true {\r\n  \"ExitCode\": 0\r\n}\r\n"
+    },
+    {
+      "t": 1794104727749,
+      "phase": "poll",
+      "fact": "0s listed=true sawGone=false ip=172.23.246.202"
+    },
+    {
+      "t": 1794104733201,
+      "phase": "poll",
+      "fact": "6s listed=true sawGone=false ip=?"
+    },
+    {
+      "t": 1794104738646,
+      "phase": "poll",
+      "fact": "11s listed=true sawGone=false ip=?"
+    },
+    {
+      "t": 1794104744094,
+      "phase": "ip-change",
+      "fact": "172.23.246.202 -> 172.23.246.22"
+    },
+    {
+      "t": 1794104744094,
+      "phase": "poll",
+      "fact": "17s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104749549,
+      "phase": "poll",
+      "fact": "22s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104754993,
+      "phase": "poll",
+      "fact": "28s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104760438,
+      "phase": "poll",
+      "fact": "33s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104765891,
+      "phase": "poll",
+      "fact": "39s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104771344,
+      "phase": "poll",
+      "fact": "44s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104776802,
+      "phase": "poll",
+      "fact": "50s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104782262,
+      "phase": "poll",
+      "fact": "55s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104787705,
+      "phase": "poll",
+      "fact": "60s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104793150,
+      "phase": "poll",
+      "fact": "66s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104798599,
+      "phase": "poll",
+      "fact": "71s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104804055,
+      "phase": "poll",
+      "fact": "77s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104809506,
+      "phase": "poll",
+      "fact": "82s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104814969,
+      "phase": "poll",
+      "fact": "88s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104820424,
+      "phase": "poll",
+      "fact": "93s listed=true sawGone=false ip=172.23.246.22"
+    },
+    {
+      "t": 1794104820424,
+      "phase": "back",
+      "fact": "id back after 93s (sawGone=false) ip=172.23.246.22"
+    },
+    {
+      "t": 1794104820662,
+      "phase": "user-session",
+      "fact": "ExistingLogin exec ok=true exit=0"
+    },
+    {
+      "t": 1794104820895,
+      "phase": "persistence",
+      "fact": "marker after reboot: \"\""
+    },
+    {
+      "t": 1794104821129,
+      "phase": "shares",
+      "fact": "agent dir: []"
+    },
+    {
+      "t": 1794104821374,
+      "phase": "agent-relaunch",
+      "fact": "ok=true {\r\n  \"ExitCode\": 0\r\n}\r\n"
+    },
+    {
+      "t": 1794104821375,
+      "phase": "state-patch",
+      "fact": "host state ip -> 172.23.246.22"
+    },
+    {
+      "t": 1794104825592,
+      "phase": "agent-ping",
+      "fact": "status: {\"running\":true,\"id\":\"1d4b1c22-844b-47fe-8e36-58cc21fc3f6b\",\"ip\":\"172.23.246.22\",\"epoch\":\"98709ba2-4117-4448-9d37-6a0dde9f0845\",\"identity\":{\"protocolVersion\":2,\"agentVersion\":\"2.0.0-alpha.2\",\"agentSha256\":\"5129183d521573"
+    },
+    {
+      "t": 1794104826795,
+      "phase": "agent-marker",
+      "fact": "through reconnected agent: \"before-reboot\""
+    }
+  ],
+  "boot": {
+    "id": "1d4b1c22-844b-47fe-8e36-58cc21fc3f6b",
+    "bootSeconds": 9.916,
+    "ip": "172.23.246.202",
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-022514"
+  },
+  "sawGone": false,
+  "backAfterMs": 93124,
+  "ipAfter": "172.23.246.22",
+  "stop": {
+    "stopped": [
+      "1d4b1c22-844b-47fe-8e36-58cc21fc3f6b"
+    ],
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-022514",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-022514\\out",
+    "artifacts": [
+      "screenshots"
+    ]
+  }
+}

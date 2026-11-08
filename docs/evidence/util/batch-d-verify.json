@@ -1,0 +1,36 @@
+{
+  "startedAt": "2026-11-08T02:41:16.146Z",
+  "verdicts": [
+    {
+      "what": "boot",
+      "result": "9.905s"
+    },
+    {
+      "what": "guest_reboot",
+      "result": "back in 24.0s, ip 172.23.251.226, stages: reboot-command -> guest-down -> guest-back -> ip-changed -> agent-relaunched -> agent-verified -> desktop-ready"
+    },
+    {
+      "what": "file state survives reboot",
+      "result": "WORKED (\"survives-reboot\")"
+    },
+    {
+      "what": "registry state survives reboot",
+      "result": "WORKED (42)"
+    },
+    {
+      "what": "smart_click after reboot",
+      "result": "uia-invoke (verified: no visible state change (pattern executed)) | element: Button \"Select\" #103"
+    }
+  ],
+  "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-024116\\out",
+  "teardown": {
+    "stopped": [
+      "186fc8d5-44cf-470b-968d-c5834f402530"
+    ],
+    "runDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-024116",
+    "outDir": "C:\\Users\\user\\AppData\\Local\\sandbox-win-mcp\\runs\\20261108-024116\\out",
+    "artifacts": [
+      "screenshots"
+    ]
+  }
+}

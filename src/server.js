@@ -266,6 +266,18 @@ server.registerTool('sandbox_process_kill', {
   },
 }, tool(async (a) => text(await sbx.processKill(a))));
 
+server.registerTool('sandbox_guest_reboot', {
+  title: 'Reboot the guest in place',
+  description: 'Restart Windows INSIDE the running sandbox: same sandbox id, same run artifacts, ' +
+    'in-guest state persists (since 22H2) - the right move after an installer that demands a reboot. ' +
+    'The agent is re-injected and verified against the same epoch (identity pinned); the usually-changed ' +
+    'IP is learned automatically. Not available with network=off.',
+  inputSchema: {
+    timeoutSec: z.number().min(60).max(900).optional().describe('Wait for the guest to come back (default 300).'),
+    idleMinutes: z.number().int().min(1).max(1440).optional().describe('Idle auto-stop for the re-injected agent (default 30).'),
+  },
+}, tool(async (a) => text(await sbx.guestReboot(a))));
+
 server.registerTool('sandbox_janitor', {
   title: 'Detect and clear orphaned sandboxes',
   description: 'Detect a headless Windows Sandbox (vmmemWindowsSandbox alive without a client ' +

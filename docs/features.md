@@ -1,4 +1,4 @@
-# Feature catalog — sandbox-win-mcp 2.0.0-alpha.2 (33 MCP tools + sbx CLI)
+# Feature catalog — sandbox-win-mcp 2.0.0-alpha.2 (34 MCP tools + sbx CLI)
 
 Every feature below is implemented on this fork and verified by execution; the evidence column
 points at sanitized artifacts under `docs/evidence/`. Upstream v1.2.0 behavior is preserved
@@ -12,6 +12,7 @@ unless a row says otherwise.
 | `sandbox_status` / `sbx status` | Id, epoch, agent identity (protocol + SHA-256), desktop, recording | every lab run |
 | `sandbox_stop { force }` / `sbx stop` | Destroy + publish recordings, keep artifacts | e2e (stop-on-disconnect too) |
 | `sandbox_janitor { fix }` / `sbx janitor [--fix]` | Detect/clear headless orphans; graceful ladder then exact elevated command | janitor-1/2/3 JSONs: real orphan created, flagged, elevation path proven |
+| `sandbox_guest_reboot` / `sbx reboot` | Reboot the guest IN PLACE: state persists, new IP learned, agent re-injected and verified on the same epoch | batch-d-verify.json: 24s full ladder, file + registry markers survive; reboot-probe.json exploration |
 | `sbx doctor` (v2) | Pending-reboot as a DISTINCT check (CBS/packages/WU/file-rename sources); wsb resolution says App-Execution-Alias vs PATH | doctor-v2-host.json (caught a real pending file rename) |
 | boot telemetry | `start` returns `stages[]` (wsb-start, network-ready, shares, user-session, agent, desktop) | features-verify boot entries |
 
@@ -61,9 +62,6 @@ Conflict errors carry `code` `SBX_CONFLICT` / `SBX_ORPHAN` and embed host proces
 
 ## Known follow-ups
 
-- Guest reboot survival (in-guest `shutdown /r` keeps state since 22H2): exploration pending —
-  the singleton slot was held by an orphaned vmmem at the end of the night session (see
-  janitor-3 evidence); plan in docs/research-windows-sandbox.md.
-- `sandbox_smart_click` actionable-first selector ordering: implemented and compile-gated
-  (`selectorNote` in the result when reordering applies); live re-verification pending the
-  slot being free.
+- CHANGELOG + versioned release packaging + parity notes vs upstream v1.2.0 (M4).
+- A scripted live regression suite chaining the acid test (today: lab targets
+  `npm run lab:input -- --tag <t> --only edge,acid`).
