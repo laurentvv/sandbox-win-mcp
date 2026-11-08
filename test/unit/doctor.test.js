@@ -14,7 +14,7 @@ const failing = (f) => sandboxChecks(f).filter((c) => !c.ok);
 test('a ready PC passes every check', () => {
   const checks = sandboxChecks(ready);
   assert.ok(checks.every((c) => c.ok));
-  assert.match(formatChecks(checks), /✅ wsb command-line tool: .*wsb\.exe \(Windows Sandbox 0\.8\.107\.0\)/);
+  assert.match(formatChecks(checks), /✅ wsb command-line tool: .*wsb\.exe \(on PATH\) \(Windows Sandbox 0\.8\.107\.0\)/);
 });
 
 test('Home editions stop at the edition check', () => {

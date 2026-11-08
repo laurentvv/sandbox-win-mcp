@@ -310,6 +310,11 @@ async function main(argv) {
       return 0;
     }
 
+    case 'janitor': {
+      out(opt, await sbx.janitor({ fix: !!opt.fix }));
+      return 0;
+    }
+
     case 'drag': {
       need(4, 'drag <x1> <y1> <x2> <y2> [--duration <ms>] [--coordinates screenshot --capture-id <id>]');
       out(opt, await sbx.drag({ x1: num(pos[0], 'x1'), y1: num(pos[1], 'y1'), x2: num(pos[2], 'x2'), y2: num(pos[3], 'y2'),

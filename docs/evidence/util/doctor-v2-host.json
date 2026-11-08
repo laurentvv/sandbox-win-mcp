@@ -1,0 +1,46 @@
+{
+  "ok": false,
+  "checks": [
+    {
+      "ok": true,
+      "detail": "Windows 11 Professionnel, build 26300"
+    },
+    {
+      "ok": true,
+      "detail": "Windows Sandbox feature is on"
+    },
+    {
+      "ok": true,
+      "detail": "Virtualization is on"
+    },
+    {
+      "ok": false,
+      "detail": "A restart is pending (pending file rename) - earlier changes are not fully applied yet",
+      "fix": "Restart Windows, then run \"sbx doctor\" again."
+    },
+    {
+      "ok": true,
+      "detail": "wsb command-line tool: C:\\Users\\user\\AppData\\Local\\Microsoft\\WindowsApps\\wsb.exe (App Execution Alias) (Windows Sandbox 0.8.107.0)"
+    },
+    {
+      "ok": true,
+      "detail": "Node.js 26.13.0"
+    }
+  ],
+  "facts": {
+    "caption": "Windows 11 Professionnel",
+    "build": 26300,
+    "edition": "Professional",
+    "feature": 1,
+    "hypervisor": true,
+    "vt": false,
+    "wsb": "C:\\Users\\user\\AppData\\Local\\Microsoft\\WindowsApps\\wsb.exe",
+    "alias": "C:\\Users\\user\\AppData\\Local\\Microsoft\\WindowsApps\\wsb.exe",
+    "version": "0.8.107.0",
+    "rebootCbs": false,
+    "rebootPackages": false,
+    "rebootWu": false,
+    "rebootRename": true,
+    "node": "26.13.0"
+  }
+}

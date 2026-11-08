@@ -1,0 +1,16 @@
+{
+  "facts": {
+    "client": 0,
+    "server": 1,
+    "remoteSession": 1,
+    "vm": 1
+  },
+  "listed": [
+    "8d8a655c-d3e9-4953-93f7-9a0b2450dd87"
+  ],
+  "state": "in-use",
+  "orphan": false,
+  "note": "a remote session client is attached",
+  "fixed": false,
+  "hint": "A sandbox is in use; stop it normally (sandbox_stop)."
+}

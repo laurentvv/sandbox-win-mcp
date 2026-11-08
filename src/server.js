@@ -262,6 +262,15 @@ server.registerTool('sandbox_process_kill', {
   },
 }, tool(async (a) => text(await sbx.processKill(a))));
 
+server.registerTool('sandbox_janitor', {
+  title: 'Detect and clear orphaned sandboxes',
+  description: 'Detect a headless Windows Sandbox (vmmemWindowsSandbox alive without a client ' +
+    'process - it holds the one-sandbox slot and ignores sandbox_stop). With fix:true: graceful ' +
+    'platform stop for listed ids, client-process teardown, then a CmService restart fallback; ' +
+    'if elevation is required it returns the exact elevated command instead of failing silently.',
+  inputSchema: { fix: z.boolean().optional().describe('Default false: report only.' ) },
+}, tool(async (a) => text(await sbx.janitor(a))));
+
 server.registerTool('sandbox_type', {
   title: 'Send keys in sandbox',
   description: 'Type text or send key chords to the focused window (or a window found by title/pid, which is focused first). ' +

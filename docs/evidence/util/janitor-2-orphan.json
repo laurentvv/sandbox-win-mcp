@@ -1,0 +1,14 @@
+{
+  "facts": {
+    "client": 0,
+    "server": 0,
+    "remoteSession": 0,
+    "vm": 1
+  },
+  "listed": [],
+  "state": "headless-orphan",
+  "orphan": true,
+  "note": "vmmemWindowsSandbox is alive outside the platform",
+  "fixed": false,
+  "hint": "Orphaned sandbox detected. Re-run with fix:true (sbx janitor --fix) to tear it down."
+}

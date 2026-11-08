@@ -72,6 +72,10 @@ $f.wsb = (Get-Command wsb.exe).Source
 $alias = Join-Path $env:LOCALAPPDATA 'Microsoft\\WindowsApps\\wsb.exe'
 if (Test-Path $alias) { $f.alias = $alias }
 $f.version = "$((Get-AppxPackage MicrosoftWindows.WindowsSandbox).Version)"
+$f.rebootCbs = [bool](Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\RebootPending')
+$f.rebootPackages = [bool](Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\PackagesPending')
+$f.rebootWu = [bool](Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired')
+$f.rebootRename = [bool](Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager' -Name PendingFileRenameOperations)
 $f | ConvertTo-Json -Compress`;
 
 /** Check whether this PC can run Windows Sandbox (and sbx). Takes a few seconds. Never throws: a probe that fails is reported as a failed check. */
@@ -112,7 +116,20 @@ export function sandboxChecks(f) {
   if (f.hypervisor) add(true, 'Virtualization is on');
   else if (f.vt === false) add(false, "Virtualization is turned off in this PC's firmware", 'Turn on Intel VT-x or AMD-V (SVM) in the UEFI/BIOS settings, then restart.');
   else if (on) add(false, "Windows Sandbox is enabled but isn't running yet", 'Restart Windows.');
-  if (f.wsb) add(true, `wsb command-line tool: ${f.wsb}${f.version ? ` (Windows Sandbox ${f.version})` : ''}`);
+  // Lesson 2: "Enabled + RestartNeeded=True" must be its own state, not folded into "not running yet".
+  const pendingSources = [];
+  if (f.rebootCbs) pendingSources.push('component servicing');
+  if (f.rebootPackages) pendingSources.push('pending packages');
+  if (f.rebootWu) pendingSources.push('Windows Update');
+  if (f.rebootRename) pendingSources.push('pending file rename');
+  add(pendingSources.length === 0,
+    pendingSources.length ? `A restart is pending (${pendingSources.join(', ')}) - earlier changes are not fully applied yet` : 'No restart is pending',
+    'Restart Windows, then run "sbx doctor" again.');
+  if (f.wsb) {
+    // Lesson 1: wsb lives as an App Execution Alias; say which way it resolved.
+    const via = (f.alias && f.wsb.toLowerCase() === f.alias.toLowerCase()) ? ' (App Execution Alias)' : ' (on PATH)';
+    add(true, `wsb command-line tool: ${f.wsb}${via}${f.version ? ` (Windows Sandbox ${f.version})` : ''}`);
+  }
   else if (f.alias) add(false, `wsb.exe is installed but not on PATH (${f.alias})`, `Add ${path.dirname(f.alias)} to PATH.`);
   else add(false, "The wsb command-line tool isn't installed",
     'Open Windows Sandbox from the Start menu once, then close it: it updates itself from the Microsoft Store, which adds wsb.');
@@ -126,6 +143,76 @@ async function explainNotReady(e, reason) {
   const r = await checkSandbox().catch(() => null);
   if (!r || r.ok || r.facts.probeError) return e; // if we couldn't read the PC's state, the original error is the better message
   return new Error(`Windows Sandbox isn't ready on this PC (${reason}):\n${formatChecks(r.checks.filter((c) => !c.ok))}\nRun "sbx doctor" to check again.`);
+}
+
+// ---------- janitor: orphaned sandbox detection and teardown (lesson 3) ----------
+
+/** Run a PowerShell probe and parse JSON out of it; never throws. */
+function ps(script, timeoutMs = 30_000) {
+  return new Promise((resolve) => {
+    execFile('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { timeout: timeoutMs, windowsHide: true },
+      (err, stdout) => { try { resolve(JSON.parse(stdout)); } catch { resolve(null); } });
+  });
+}
+
+const JANITOR_PROBE = `$ErrorActionPreference = 'SilentlyContinue'
+@{ vm = @(Get-Process vmmemWindowsSandbox).Count
+   remoteSession = @(Get-Process WindowsSandboxRemoteSession).Count
+   server = @(Get-Process WindowsSandboxServer).Count
+   client = @(Get-Process WindowsSandboxClient).Count } | ConvertTo-Json -Compress`;
+
+/**
+ * Classify the Windows Sandbox machine state from host process facts + `wsb list` ids.
+ * Orphan = the VM worker (vmmemWindowsSandbox) is alive with no attached remote-session
+ * client - it holds the singleton slot and ignores the platform CLI until torn down.
+ */
+export function classifyJanitor(facts, listedIds = []) {
+  const listed = Array.isArray(listedIds) ? listedIds : [];
+  if (!facts || !facts.vm) return { state: 'clean', orphan: false };
+  if (facts.remoteSession > 0) return { state: 'in-use', orphan: false, note: 'a remote session client is attached' };
+  return listed.length
+    ? { state: 'headless-listed', orphan: true, note: 'listed by wsb but no client process is attached' }
+    : { state: 'headless-orphan', orphan: true, note: 'vmmemWindowsSandbox is alive outside the platform' };
+}
+
+/** Detect orphaned sandboxes; with fix, tear them down (graceful first, elevation hint last). */
+export async function janitor({ fix = false } = {}) {
+  const facts = await ps(JANITOR_PROBE);
+  const listed = await listSandboxes().catch(() => []);
+  const classif = classifyJanitor(facts, listed);
+  const result = { facts, listed, ...classif, fixed: false };
+  if (!fix || !classif.orphan) {
+    result.hint = classif.orphan
+      ? 'Orphaned sandbox detected. Re-run with fix:true (sbx janitor --fix) to tear it down.'
+      : classif.state === 'in-use' ? 'A sandbox is in use; stop it normally (sandbox_stop).' : 'Nothing to clean.';
+    return result;
+  }
+  const actions = [];
+  for (const id of listed) {
+    try { await wsb(['stop', '--id', id]); actions.push(`wsb stop ${id.slice(0, 8)}: ok`); }
+    catch (e) { actions.push(`wsb stop ${id.slice(0, 8)}: ${e.message}`); }
+  }
+  if ((facts?.remoteSession ?? 0) + (facts?.server ?? 0) + (facts?.client ?? 0) > 0) {
+    await ps('Stop-Process -Name WindowsSandboxRemoteSession,WindowsSandboxServer,WindowsSandboxClient -Force');
+    actions.push('client processes stopped');
+  }
+  await sleep(4000);
+  let after = await ps(JANITOR_PROBE);
+  if (after?.vm) {
+    // Fallback: the user's observed remedy for a stuck singleton slot (needs admin).
+    const svc = await ps('try { Restart-Service CmService -Force; "ok" | ConvertTo-Json -Compress } catch { $_.Exception.Message | ConvertTo-Json -Compress }');
+    if (svc === 'ok') { actions.push('CmService restarted'); await sleep(5000); after = await ps(JANITOR_PROBE); }
+    else actions.push(`CmService restart refused: ${String(svc).slice(0, 120)}`);
+  }
+  result.actions = actions;
+  result.after = after;
+  result.fixed = !after?.vm;
+  if (!result.fixed) {
+    result.elevatedCommand = "Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile','-Command'," +
+      '"Restart-Service CmService -Force; Stop-Process -Name vmmemWindowsSandbox -Force"';
+    result.hint = 'Could not clear the orphan from this (non-elevated) session. Run elevatedCommand in an admin window.';
+  }
+  return result;
 }
 
 export async function listSandboxes() {
@@ -312,10 +399,16 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
   const existing = await listSandboxes();
   if (existing.length) {
     const ours = readState()?.id;
-    throw new Error(`A sandbox is already running (${existing.join(', ')}). Windows allows only one; ` +
-      (existing.includes(ours) ? 'stop it first (sandbox_stop / `sbx stop`).' : 'it was not started by sbx; close it or stop it with force.'));
+    const facts = await ps(JANITOR_PROBE).catch(() => null);
+    const classif = classifyJanitor(facts, existing);
+    const e = new Error(`A sandbox is already running (${existing.join(', ')}). Windows allows only one; ` +
+      (existing.includes(ours) ? 'stop it first (sandbox_stop / `sbx stop`).' : 'it was not started by sbx; close it or stop it with force.') +
+      (classif.orphan ? ` Host process state: ${JSON.stringify(facts)} - this looks ORPHANED (${classif.note}); sandbox_janitor / \`sbx janitor --fix\` can clear it.` : ''));
+    e.code = classif.orphan ? 'SBX_ORPHAN' : 'SBX_CONFLICT';
+    throw e;
   }
   const t0 = Date.now();
+  const stages = []; // structured per-stage boot telemetry (lesson 10)
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 15);
   const runDir = path.join(HOME, 'runs', stamp);
   for (const d of ['agent', 'in', 'out']) fs.mkdirSync(path.join(runDir, d), { recursive: true });
@@ -328,7 +421,7 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
   atomicJson(path.join(runDir, 'agent', 'identity.json'), { epoch, ...identity });
 
   const steps = [];
-  const step = (s) => { steps.push(`${((Date.now() - t0) / 1000).toFixed(1)}s ${s}`); log(s); };
+  const step = (name, s) => { const at = ((Date.now() - t0) / 1000).toFixed(2); steps.push(`${Number(at).toFixed(1)}s ${s}`); stages.push({ name, atMs: Math.round((Date.now() - t0)) }); log(s); };
   log(`booting a fresh Windows Sandbox (network ${network})`);
   const config = configXml({ memoryMB, networking: network !== 'off', vGpu });
   const offline = network === 'off';
@@ -337,7 +430,7 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
   let id, ip;
   for (let attempt = 1; attempt <= 2 && !ip; attempt++) {
     id = (await wsb(['start', '--config', config])).Id;
-    step(`started ${id}`);
+    step('wsb-start', `started ${id}`);
     ip = await waitFor(async () => {
       if (!(await listSandboxes()).includes(id)) throw Object.assign(new Error('sandbox exited during boot'), { fatal: true });
       if (!offline) return getIp(id);
@@ -345,7 +438,7 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
       return (await wsb(['exec', '--id', id, '-r', 'System', '-c', 'cmd /c exit 0'])).ExitCode === 0 && 'none';
     }, 120_000, 'sandbox to boot').catch(async (e) => { if (attempt === 2) throw e; await sleep(5000); return null; });
   }
-  step(offline ? 'booted (no network)' : `ip ${ip}`);
+  step('network-ready', offline ? 'booted (no network)' : `ip ${ip}`);
 
   const target = {
     id, ip: offline ? null : ip, port: AGENT_PORT, epoch, identity, runDir, network, transport: offline ? 'files' : 'tcp',
@@ -355,13 +448,13 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
     await wsb(['share', '--id', id, '-f', path.join(runDir, 'agent'), '-s', GUEST.agent]);
     await wsb(['share', '--id', id, '-f', path.join(runDir, 'in'), '-s', GUEST.in]);
     await wsb(['share', '--id', id, '-f', path.join(runDir, 'out'), '-s', GUEST.out, '--allow-write']);
-    step('folders shared');
+    step('shares', 'folders shared');
 
     // An interactive user session only exists once a remote session is connected.
     spawn('wsb.exe', ['connect', '--id', id], { detached: true, stdio: 'ignore', windowsHide: false }).unref();
     await waitFor(async () => (await wsb(['exec', '--id', id, '-r', 'ExistingLogin', '-c', 'cmd /c exit 0'])).ExitCode === 0,
       90_000, 'user logon session');
-    step('user session ready');
+    step('user-session', 'user session ready');
     if (window === 'minimized') minimizeSandboxWindow();
 
     if (network === 'on') {
@@ -385,7 +478,7 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
     if (hello.epoch !== epoch) throw new Error(STALE_BOOT);
     if (hello.protocolVersion !== identity.protocolVersion) throw new Error(`Sandbox protocol mismatch: expected ${identity.protocolVersion}, got ${hello.protocolVersion}`);
     if (hello.agentVersion !== identity.agentVersion || hello.agentSha256 !== identity.agentSha256) throw new Error('Sandbox agent identity mismatch: staged agent files do not match the running guest.');
-    step(`agent up as ${hello.user}`);
+    step('agent', `agent up as ${hello.user}`);
     let desktopFacts;
     const desktop = await waitFor(async () => {
       const facts = await agentCall(target, 'desktop', {}, 5000);
@@ -394,7 +487,7 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
     }, 60_000, 'interactive desktop (locked / secure desktop / UAC)').catch((e) => {
       throw new Error(`${e.message}; last desktop facts: ${JSON.stringify(desktopFacts ?? null)}`);
     });
-    step('desktop ready (Default input desktop, explorer, capture verified)');
+    step('desktop', 'desktop ready (Default input desktop, explorer, capture verified)');
     target.desktop = desktop;
     target.desktopReadySeconds = (Date.now() - t0) / 1000;
     updateState(target, (state) => {
@@ -402,8 +495,8 @@ export async function startSandbox({ network = 'on', internet, memoryMB, window 
       state.desktopReadySeconds = target.desktopReadySeconds;
     });
     const bootSeconds = (Date.now() - t0) / 1000;
-    audit(target, { op: 'start', network, memoryMB, bootSeconds, desktopReadySeconds: target.desktopReadySeconds, desktop, steps, ok: true });
-    return { id, ip: target.ip, epoch, identity, network, runDir, outDir: path.join(runDir, 'out'), user: hello.user, desktop, desktopReadySeconds: target.desktopReadySeconds, bootSeconds, steps };
+    audit(target, { op: 'start', network, memoryMB, bootSeconds, desktopReadySeconds: target.desktopReadySeconds, desktop, steps, stages, ok: true });
+    return { id, ip: target.ip, epoch, identity, network, runDir, outDir: path.join(runDir, 'out'), user: hello.user, desktop, desktopReadySeconds: target.desktopReadySeconds, bootSeconds, steps, stages };
   } catch (e) {
     clearState(target); verifiedId = null;
     await wsb(['stop', '--id', id]).catch(() => {});

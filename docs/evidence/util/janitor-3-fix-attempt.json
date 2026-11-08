@@ -1,0 +1,25 @@
+{
+  "facts": {
+    "client": 0,
+    "server": 1,
+    "remoteSession": 0,
+    "vm": 1
+  },
+  "listed": [],
+  "state": "headless-orphan",
+  "orphan": true,
+  "note": "vmmemWindowsSandbox is alive outside the platform",
+  "fixed": false,
+  "actions": [
+    "client processes stopped",
+    "CmService restart refused: null"
+  ],
+  "after": {
+    "client": 0,
+    "server": 0,
+    "remoteSession": 0,
+    "vm": 1
+  },
+  "elevatedCommand": "Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile','-Command',\"Restart-Service CmService -Force; Stop-Process -Name vmmemWindowsSandbox -Force\"",
+  "hint": "Could not clear the orphan from this (non-elevated) session. Run elevatedCommand in an admin window."
+}
