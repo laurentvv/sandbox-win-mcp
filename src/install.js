@@ -184,7 +184,8 @@ export async function installTest(o) {
     fs.mkdirSync(r.outDir, { recursive: true });
     r.reportPath = path.join(r.outDir, 'report.md');
     fs.writeFileSync(r.reportPath, renderInstallReport(r));
-    fs.writeFileSync(path.join(r.outDir, 'report.json'), JSON.stringify({ ...r, shots: r.shots.map(({ previewBase64, ...s }) => s) }, null, 2));
+    r.reportSchema = 'sandbox-win-mcp/install-test-report@1';
+    fs.writeFileSync(path.join(r.outDir, 'report.json'), JSON.stringify(sbx.reportEnvelope('install-test', { ...r, shots: r.shots.map(({ previewBase64, ...s }) => s) }), null, 2));
   }
   return r;
 }

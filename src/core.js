@@ -27,6 +27,11 @@ const ALLOWED_ROOTS = (process.env.SANDBOX_MCP_ALLOWED_ROOTS || '').split(';').m
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export const log = (...a) => console.error('[sbx]', ...a);
 
+/** Versioned envelope for one-shot flow reports: stable JSON schema next to the markdown (mission M3). */
+export function reportEnvelope(kind, result) {
+  return { schema: `sandbox-win-mcp/${kind}-report@1`, schemaVersion: 1, kind, generatedAt: new Date().toISOString(), result };
+}
+
 /** Idle auto-stop minutes for a sandbox boot: explicit per call, sane bounds. */
 export function validateIdleMinutes(v) {
   if (v === undefined || v === null || v === '') return IDLE_MINUTES;
@@ -558,37 +563,63 @@ export async function status() {
 
 // ---------- operations ----------
 
-function checkAllowed(p) {
-  if (!ALLOWED_ROOTS.length) return;
-  const real = fs.realpathSync.native(p).toLowerCase();
-  const ok = ALLOWED_ROOTS.some((r) => {
+/** Lesson 7: empty roots mean UNRESTRICTED copy-in; every such copy carries this warning. */
+export const UNRESTRICTED_ROOTS_WARNING = 'SANDBOX_MCP_ALLOWED_ROOTS is empty: any host path can be copied INTO the sandbox. ' +
+  'Set it (semicolon-separated host roots, e.g. your build output folders) to confine copy_in/deploy sources.';
+
+/**
+ * Pure host-path guard against explicit roots (unit-testable). Returns { allowed: true, warning? }:
+ * an empty root list allows everything but flags it; a non-empty list throws for anything outside
+ * the roots (real-path aware, so junctions and case differences do not bypass it).
+ */
+export function checkAllowedPath(p, roots) {
+  const list = (roots ?? []).filter(Boolean);
+  if (!list.length) return { allowed: true, warning: UNRESTRICTED_ROOTS_WARNING };
+  let real;
+  try { real = fs.realpathSync.native(p).toLowerCase(); } catch { real = path.resolve(p).toLowerCase(); }
+  const ok = list.some((r) => {
     const root = (fs.existsSync(r) ? fs.realpathSync.native(r) : path.resolve(r)).toLowerCase().replace(/[\\/]+$/, '');
     return real === root || real.startsWith(root + path.sep);
   });
-  if (!ok) throw new Error(`${p} is outside SANDBOX_MCP_ALLOWED_ROOTS (${ALLOWED_ROOTS.join('; ')})`);
+  if (!ok) throw new Error(`${p} is outside SANDBOX_MCP_ALLOWED_ROOTS (${list.join('; ')})`);
+  return { allowed: true };
+}
+
+function checkAllowed(p) {
+  return checkAllowedPath(p, ALLOWED_ROOTS);
 }
 
 export async function copyIn(hostPath, sandboxPath, target) {
   const s = target || await requireSandbox();
   const src = path.resolve(hostPath);
   if (!fs.existsSync(src)) throw new Error(`Host path not found: ${src}`);
-  checkAllowed(src);
+  const guard = checkAllowed(src); // throws outside configured roots; warns when unrestricted
   const base = path.basename(src);
   const seq = updateState(s, (st) => ++st.seq);
   const stage = `${seq}-${base}`; // fresh folder each time avoids the guest's stale directory cache
   fs.cpSync(src, path.join(s.runDir, 'in', stage), { recursive: true });
-  return call('copy', { from: `${GUEST.in}\\${stage}`, to: sandboxPath || `C:\\apps\\${base}` }, 600_000, s);
+  const r = await call('copy', { from: `${GUEST.in}\\${stage}`, to: sandboxPath || `C:\\apps\\${base}` }, 600_000, s);
+  return guard.warning ? { ...r, warning: guard.warning } : r;
 }
 
 export async function copyOut(sandboxPath, name) {
   const s = await requireSandbox();
   const n = (name || sandboxPath.split(/[\\/]/).filter(Boolean).pop() || 'item').replace(/[:*?"<>|]/g, '_');
+  if (/[\\/]|\.\./.test(n)) throw new Error(`copy_out name must be a plain file name (got ${JSON.stringify(n)})`);
   const r = await call('copy', { from: sandboxPath, to: `${GUEST.out}\\files\\${n}` }, 600_000, s);
-  return { hostPath: path.join(s.runDir, 'out', 'files', n), files: r.files, bytes: r.bytes };
+  // Lesson 7: the guest writes the out share; everything landing here is untrusted data.
+  const hostPath = path.join(s.runDir, 'out', 'files', n);
+  if (!hostPath.toLowerCase().startsWith(path.join(s.runDir, 'out').toLowerCase() + path.sep)) {
+    throw new Error('copy_out destination escaped the run out directory');
+  }
+  return { hostPath, files: r.files, bytes: r.bytes, untrusted: true,
+    note: 'Guest-written data is untrusted: treat this file as attacker-controlled.' };
 }
 
 export async function deploy(options) {
-  return deployDirectory(options, { getSandbox: requireSandbox, checkAllowed, call });
+  const guard = checkAllowedPath(options?.hostPath, ALLOWED_ROOTS); // throws or warns, before any staging
+  const r = await deployDirectory(options, { getSandbox: requireSandbox, checkAllowed, call });
+  return guard.warning ? { ...r, warning: guard.warning } : r;
 }
 
 export async function exec({ command, shell, cwd, timeoutSec = 120 }, target) {

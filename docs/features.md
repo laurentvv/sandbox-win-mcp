@@ -64,6 +64,6 @@ Conflict errors carry `code` `SBX_CONFLICT` / `SBX_ORPHAN` and embed host proces
 - Guest reboot survival (in-guest `shutdown /r` keeps state since 22H2): exploration pending —
   the singleton slot was held by an orphaned vmmem at the end of the night session (see
   janitor-3 evidence); plan in docs/research-windows-sandbox.md.
-- `sandbox_smart_click` selector hardening (prefer actionable nodes when several match a name).
-- Report schema stabilization (JSON+md) for install_test/detonate (mission M3 leftover).
-- ALLOWED_ROOTS copy_out hardening + safe-default prompt (mission M3 leftover).
+- `sandbox_smart_click` actionable-first selector ordering: implemented and compile-gated
+  (`selectorNote` in the result when reordering applies); live re-verification pending the
+  slot being free.

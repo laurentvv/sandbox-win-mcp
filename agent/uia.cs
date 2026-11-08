@@ -250,6 +250,16 @@ public static class SbxUia
 
     // ---------- smart input (UIA-first ladder, M2) ----------
 
+    /** True when the element exposes at least one pattern we can drive (the actionable ones). */
+    static bool HasControlPattern(IUIAutomationElement e)
+    {
+        return Pattern<IUIAutomationInvokePattern>(e, InvokeId) != null
+            || Pattern<IUIAutomationTogglePattern>(e, ToggleId) != null
+            || Pattern<IUIAutomationSelectionItemPattern>(e, SelectionItemId) != null
+            || Pattern<IUIAutomationExpandCollapsePattern>(e, ExpandCollapseId) != null
+            || Pattern<IUIAutomationValuePattern>(e, ValueId) != null;
+    }
+
     /** Observable state of an element, for before/after effect checks. */
     static string Fingerprint(Dictionary<string, object> d)
     {
@@ -306,12 +316,21 @@ public static class SbxUia
             var m = Matches(pid, title, name, automationId, controlType);
             if (m.Count == 0) throw new InvalidOperationException("No element matches " + Selector(name, automationId, controlType) + ". Use uitree to see what is there.");
             if (index >= m.Count) throw new InvalidOperationException(m.Count + " element(s) match " + Selector(name, automationId, controlType) + "; index " + index + " is out of range.");
+            // Loose name matches often hit explanatory Text nodes before the real control (lab exp1b):
+            // when several match and the caller did not pin an index, try actionable elements first.
+            bool reordered = false;
+            if (index <= 0 && m.Count > 1)
+            {
+                var ordered = m.OrderByDescending(HasControlPattern).ToList();
+                if (HasControlPattern(ordered[0]) && !HasControlPattern(m[0])) { m = ordered; reordered = true; }
+            }
             var e = m[index];
             var before = Describe(e, -1);
             var attempts = new List<Dictionary<string, object>>();
             var result = new Dictionary<string, object>();
             result["element"] = before;
             result["matches"] = m.Count;
+            if (reordered) result["selectorNote"] = "multiple matches: actionable-first ordering applied";
 
             Func<List<IUIAutomationElement>> rematch = () => Safe(() => Matches(pid, title, name, automationId, controlType));
             Func<bool> gone = () => { var m2 = rematch(); return m2 == null || m2.Count == 0; };

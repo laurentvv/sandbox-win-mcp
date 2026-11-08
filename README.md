@@ -66,8 +66,12 @@ Or the CLI: `node src/cli.js help`.
 - **Guest outputs are untrusted data, always.** Everything written to the run `out/` folder is
   guest-writable; treat copied-out files as attacker-controlled.
 - `SANDBOX_MCP_ALLOWED_ROOTS` (semicolon-separated) restricts which host paths may be copied
-  **into** a sandbox. **Empty means unrestricted** — set it, e.g. to your build output roots.
-  Host-side reads of guest output are always confined to the run directory.
+  **into** a sandbox. **Empty means unrestricted** — and says so: while it is empty, every
+  `sandbox_copy_in`/`sandbox_deploy` result carries an explicit unrestricted-roots warning.
+  Host-side reads of guest output are always confined to the run directory; `sandbox_copy_out`
+  results are marked `untrusted: true`.
+- One-shot reports (`sandbox_run`, `sandbox_install_test`, `sandbox_detonate`) write BOTH
+  report.md and a versioned report.json envelope (`sandbox-win-mcp/<flow>-report@1`).
 - The offline control channel is HKDF-derived, AES-256-CBC + HMAC-SHA256 framed, with replay
   protection and agent identity pinning (protocol version + SHA-256 of staged agent files).
 - Detonate reports are heuristics, never a safety verdict.

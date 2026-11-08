@@ -140,8 +140,9 @@ export async function runApp(o) {
     fs.mkdirSync(r.outDir, { recursive: true });
     r.reportPath = path.join(r.outDir, 'report.md');
     fs.writeFileSync(r.reportPath, renderReport(r));
+    r.reportSchema = 'sandbox-win-mcp/run-report@1';
     fs.writeFileSync(path.join(r.outDir, 'report.json'),
-      JSON.stringify({ ...r, shots: r.shots.map(({ previewBase64, ...s }) => s) }, null, 2));
+      JSON.stringify(sbx.reportEnvelope('run', { ...r, shots: r.shots.map(({ previewBase64, ...s }) => s) }), null, 2));
   }
   return r;
 }
