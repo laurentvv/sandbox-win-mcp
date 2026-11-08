@@ -27,7 +27,7 @@ for the full per-file audit and the ten live lessons that drive the roadmap).
 | M1 ✅ | Reliability | doctor v2 (App-Execution-Alias resolution, **pending-reboot state**, caught a real one live), **janitor** for headless `vmmemWindowsSandbox` orphans (real orphan created + detected + elevation path proven), conflict taxonomy (`SBX_CONFLICT`/`SBX_ORPHAN`), per-stage boot telemetry, per-call `idleMinutes` |
 | M2 🟢 | Input engine | `sandbox_smart_click` UIA-first ladder with per-action strategy reporting + effect checks; explicit `mode: text\|keys` typing; **acid test passed** (consent wall dismissed in 1 call — [lab findings](docs/lab-input-findings.md)); drag + scroll verified with CDP/window oracles |
 | M3 ✅ | Power features | **CDP passthrough** (`sandbox_edge_debug` + DOM-level driving proven from the host), `sandbox_process_kill`, **`sandbox_guest_reboot`** (in-guest reboot, state persists, agent re-injected on the same epoch — 24 s measured), versioned report envelopes (`…-report@1`), ALLOWED_ROOTS hardening (unrestricted warning + untrusted-marked copy_out) |
-| M4 🟡 | Delivery | [feature catalog](docs/features.md) with per-feature evidence; docs pages, CHANGELOG, releases + parity notes pending |
+| M4 ✅ | Delivery | [CHANGELOG](CHANGELOG.md), [parity notes vs upstream v1.2.0](docs/parity.md) (grounded in diff stats), [feature catalog](docs/features.md) with per-feature evidence, portable release artifact built + smoke-tested (`sandbox-win-mcp-win-x64-v2.0.0-alpha.3.zip`); publication to a remote awaits an explicit go |
 
 Non-goals: multi-guest concurrency (Windows allows one sandbox — we queue politely), malware
 verdicts (detonate stays heuristic), non-Windows hosts.

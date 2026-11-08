@@ -3,7 +3,7 @@ $ProgressPreference = 'SilentlyContinue'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $distRoot = Join-Path $repoRoot 'dist'
-$stage = Join-Path $distRoot 'sandbox-mcp'
+$stage = Join-Path $distRoot 'sandbox-win-mcp'
 $package = Get-Content (Join-Path $repoRoot 'package.json') -Raw | ConvertFrom-Json
 $node = Get-Command node.exe -ErrorAction Stop
 $nodeVersion = (& $node.Source --version).Trim()
@@ -22,7 +22,7 @@ if (-not (Test-Path (Join-Path $repoRoot 'node_modules\@modelcontextprotocol\sdk
   throw 'Dependencies are missing. Run npm ci --omit=dev, then npm run package:win.'
 }
 
-$archive = Join-Path $distRoot "sandbox-mcp-win-x64-v$($package.version).zip"
+$archive = Join-Path $distRoot "sandbox-win-mcp-win-x64-v$($package.version).zip"
 New-Item -ItemType Directory -Force -Path $distRoot | Out-Null
 if (Test-Path $stage) { Remove-Item -LiteralPath $stage -Recurse -Force }
 if (Test-Path $archive) { Remove-Item -LiteralPath $archive -Force }
@@ -40,7 +40,7 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/nodej
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'sbx.cmd') -Destination $stage
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'sandbox-mcp.cmd') -Destination $stage
 @(
-  "sandbox-mcp $($package.version)"
+  "sandbox-win-mcp $($package.version)"
   'Platform: Windows x64'
   "Bundled runtime: Node.js $nodeVersion (license: NODE-LICENSE.txt)"
   "Source commit: $sourceCommit"

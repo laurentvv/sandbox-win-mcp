@@ -62,6 +62,7 @@ Conflict errors carry `code` `SBX_CONFLICT` / `SBX_ORPHAN` and embed host proces
 
 ## Known follow-ups
 
-- CHANGELOG + versioned release packaging + parity notes vs upstream v1.2.0 (M4).
+- Publishing (remote, tags, GitHub releases) awaits an explicit instruction; the local release
+  artifact pipeline is validated (`npm run package:win` + `node test/package-smoke.js <zip>`).
 - A scripted live regression suite chaining the acid test (today: lab targets
   `npm run lab:input -- --tag <t> --only edge,acid`).
